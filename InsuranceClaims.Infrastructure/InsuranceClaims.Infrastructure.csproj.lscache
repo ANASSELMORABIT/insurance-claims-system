@@ -66,6 +66,7 @@ obj/Debug/net8.0/
 Services/
  AuthService.cs
  ClaimService.cs
+ DocumentService.cs
  TokenService.cs
 
 [metadataReferences]

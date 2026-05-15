@@ -64,7 +64,9 @@ DTOs/Claims/
  CreateClaimDto.cs
  UpdateClaimDto.cs
  UpdateClaimStatusDto.cs
-DTOs/PagedResult.cs
+DTOs/
+ Documents/DocumentResponseDto.cs
+ PagedResult.cs
 Entities/
  ApplicationUser.cs
  Claim.cs
@@ -76,6 +78,7 @@ Enums/ClaimStatusEnum.cs
 Interfaces/
  IAuthService.cs
  IClaimService.cs
+ IDocumentService.cs
 obj/Debug/net8.0/
  .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
  InsuranceClaims.Core.AssemblyInfo.cs
@@ -85,6 +88,8 @@ obj/Debug/net8.0/
 <NUGET>/
  microsoft.aspnetcore.cryptography.internal/8.0.11/lib/net8.0/Microsoft.AspNetCore.Cryptography.Internal.dll
  microsoft.aspnetcore.cryptography.keyderivation/8.0.11/lib/net8.0/Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+ microsoft.aspnetcore.http.abstractions/2.2.0/lib/netstandard2.0/Microsoft.AspNetCore.Http.Abstractions.dll
+ microsoft.aspnetcore.http.features/2.2.0/lib/netstandard2.0/Microsoft.AspNetCore.Http.Features.dll
  microsoft.aspnetcore.identity.entityframeworkcore/8.0.11/lib/net8.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
  microsoft.entityframeworkcore.abstractions/8.0.11/lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
  microsoft.entityframeworkcore.relational/8.0.11/lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
