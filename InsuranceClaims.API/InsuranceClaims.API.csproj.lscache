@@ -53,6 +53,7 @@ TemporaryDependencyNodeTargetIdentifier=net8.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
+Controllers/AuthController.cs
 obj/Debug/net8.0/
  .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
  InsuranceClaims.API.AssemblyInfo.cs
@@ -199,9 +200,11 @@ Program.cs
   System.Diagnostics.EventLog.dll
   System.Security.Cryptography.Xml.dll
   System.Threading.RateLimiting.dll
+ microsoft.aspnetcore.authentication.jwtbearer/8.0.11/lib/net8.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
  microsoft.aspnetcore.identity.entityframeworkcore/8.0.11/lib/net8.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
  microsoft.aspnetcore.openapi/8.0.26/lib/net8.0/Microsoft.AspNetCore.OpenApi.dll
  microsoft.bcl.asyncinterfaces/6.0.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll
+ microsoft.bcl.timeprovider/8.0.1/lib/net8.0/Microsoft.Bcl.TimeProvider.dll
  microsoft.data.sqlclient/5.1.6/ref/net6.0/Microsoft.Data.SqlClient.dll
  microsoft.entityframeworkcore.abstractions/8.0.11/lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
  microsoft.entityframeworkcore.relational/8.0.11/lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
@@ -222,12 +225,12 @@ Program.cs
  microsoft.extensions.primitives/10.0.0/lib/net8.0/Microsoft.Extensions.Primitives.dll
  microsoft.identity.client.extensions.msal/4.61.3/lib/net6.0/Microsoft.Identity.Client.Extensions.Msal.dll
  microsoft.identity.client/4.61.3/lib/net6.0/Microsoft.Identity.Client.dll
- microsoft.identitymodel.abstractions/6.35.0/lib/net6.0/Microsoft.IdentityModel.Abstractions.dll
- microsoft.identitymodel.jsonwebtokens/6.35.0/lib/net6.0/Microsoft.IdentityModel.JsonWebTokens.dll
- microsoft.identitymodel.logging/6.35.0/lib/net6.0/Microsoft.IdentityModel.Logging.dll
- microsoft.identitymodel.protocols.openidconnect/6.35.0/lib/net6.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
- microsoft.identitymodel.protocols/6.35.0/lib/net6.0/Microsoft.IdentityModel.Protocols.dll
- microsoft.identitymodel.tokens/6.35.0/lib/net6.0/Microsoft.IdentityModel.Tokens.dll
+ microsoft.identitymodel.abstractions/8.1.0/lib/net8.0/Microsoft.IdentityModel.Abstractions.dll
+ microsoft.identitymodel.jsonwebtokens/8.1.0/lib/net8.0/Microsoft.IdentityModel.JsonWebTokens.dll
+ microsoft.identitymodel.logging/8.1.0/lib/net8.0/Microsoft.IdentityModel.Logging.dll
+ microsoft.identitymodel.protocols.openidconnect/7.1.2/lib/net8.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+ microsoft.identitymodel.protocols/7.1.2/lib/net8.0/Microsoft.IdentityModel.Protocols.dll
+ microsoft.identitymodel.tokens/8.1.0/lib/net8.0/Microsoft.IdentityModel.Tokens.dll
  microsoft.netcore.app.ref/8.0.27/ref/net8.0/
   Microsoft.CSharp.dll
   Microsoft.VisualBasic.Core.dll
@@ -389,7 +392,7 @@ Program.cs
   System.Xml.XPath.dll
   System.Xml.XPath.XDocument.dll
   WindowsBase.dll
- microsoft.openapi/2.4.1/lib/net8.0/Microsoft.OpenApi.dll
+ microsoft.openapi/1.4.3/lib/netstandard2.0/Microsoft.OpenApi.dll
  microsoft.sqlserver.server/1.0.0/lib/netstandard2.0/Microsoft.SqlServer.Server.dll
  mimekit/4.16.0/lib/net8.0/MimeKit.dll
  serilog.aspnetcore/10.0.0/lib/net8.0/Serilog.AspNetCore.dll
@@ -401,12 +404,12 @@ Program.cs
  serilog.sinks.debug/3.0.0/lib/net8.0/Serilog.Sinks.Debug.dll
  serilog.sinks.file/7.0.0/lib/net8.0/Serilog.Sinks.File.dll
  serilog/4.3.0/lib/net8.0/Serilog.dll
- swashbuckle.aspnetcore.swagger/10.1.7/lib/net8.0/Swashbuckle.AspNetCore.Swagger.dll
- swashbuckle.aspnetcore.swaggergen/10.1.7/lib/net8.0/Swashbuckle.AspNetCore.SwaggerGen.dll
- swashbuckle.aspnetcore.swaggerui/10.1.7/lib/net8.0/Swashbuckle.AspNetCore.SwaggerUI.dll
+ swashbuckle.aspnetcore.swagger/6.5.0/lib/net7.0/Swashbuckle.AspNetCore.Swagger.dll
+ swashbuckle.aspnetcore.swaggergen/6.5.0/lib/net7.0/Swashbuckle.AspNetCore.SwaggerGen.dll
+ swashbuckle.aspnetcore.swaggerui/6.5.0/lib/net7.0/Swashbuckle.AspNetCore.SwaggerUI.dll
  system.clientmodel/1.0.0/lib/net6.0/System.ClientModel.dll
  system.diagnostics.diagnosticsource/10.0.0/lib/net8.0/System.Diagnostics.DiagnosticSource.dll
- system.identitymodel.tokens.jwt/6.35.0/lib/net6.0/System.IdentityModel.Tokens.Jwt.dll
+ system.identitymodel.tokens.jwt/8.1.0/lib/net8.0/System.IdentityModel.Tokens.Jwt.dll
  system.io.pipelines/10.0.0/lib/net8.0/System.IO.Pipelines.dll
  system.memory.data/1.0.2/lib/netstandard2.0/System.Memory.Data.dll
  system.security.cryptography.pkcs/8.0.1/lib/net8.0/System.Security.Cryptography.Pkcs.dll

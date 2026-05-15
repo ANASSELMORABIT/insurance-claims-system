@@ -54,6 +54,10 @@ TemporaryDependencyNodeTargetIdentifier=net8.0
 
 [sourceFiles]
 Class1.cs
+DTOs/Auth/
+ AuthResponse.cs
+ LoginRequest.cs
+ RegisterRequest.cs
 Entities/
  ApplicationUser.cs
  Claim.cs
@@ -62,6 +66,7 @@ Entities/
  Notification.cs
  Policy.cs
 Enums/ClaimStatusEnum.cs
+Interfaces/IAuthService.cs
 obj/Debug/net8.0/
  .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
  InsuranceClaims.Core.AssemblyInfo.cs
