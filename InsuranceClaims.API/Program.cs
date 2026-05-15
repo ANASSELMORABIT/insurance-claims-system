@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Http.Features;
+using InsuranceClaims.Core.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -73,6 +74,11 @@ builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 10 * 1024 * 1024;
 });
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 // Swagger con JWT
 builder.Services.AddSwaggerGen(c =>

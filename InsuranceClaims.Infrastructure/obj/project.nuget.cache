@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "9dYVCw0/ofI=",
+  "dgSpecHash": "xSYVsYRKKnY=",
   "success": true,
   "projectFilePath": "C:\\Users\\anass\\OneDrive\\Desktop\\Proyectos Personales\\InsuranceClaims\\InsuranceClaims.Infrastructure\\InsuranceClaims.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -8,9 +8,9 @@
     "C:\\Users\\anass\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
-    "C:\\Users\\anass\\.nuget\\packages\\bouncycastle.cryptography\\2.6.2\\bouncycastle.cryptography.2.6.2.nupkg.sha512",
+    "C:\\Users\\anass\\.nuget\\packages\\bouncycastle.cryptography\\2.2.1\\bouncycastle.cryptography.2.2.1.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
-    "C:\\Users\\anass\\.nuget\\packages\\mailkit\\4.16.0\\mailkit.4.16.0.nupkg.sha512",
+    "C:\\Users\\anass\\.nuget\\packages\\mailkit\\4.3.0\\mailkit.4.3.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.11\\microsoft.aspnetcore.authentication.jwtbearer.8.0.11.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\8.0.11\\microsoft.aspnetcore.cryptography.internal.8.0.11.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\8.0.11\\microsoft.aspnetcore.cryptography.keyderivation.8.0.11.nupkg.sha512",
@@ -60,7 +60,7 @@
     "C:\\Users\\anass\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.1.0\\microsoft.identitymodel.tokens.8.1.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
-    "C:\\Users\\anass\\.nuget\\packages\\mimekit\\4.16.0\\mimekit.4.16.0.nupkg.sha512",
+    "C:\\Users\\anass\\.nuget\\packages\\mimekit\\4.3.0\\mimekit.4.3.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.clientmodel\\1.0.0\\system.clientmodel.1.0.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
@@ -85,11 +85,11 @@
     "C:\\Users\\anass\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.security.accesscontrol\\6.0.0\\system.security.accesscontrol.6.0.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.security.cryptography.cng\\5.0.0\\system.security.cryptography.cng.5.0.0.nupkg.sha512",
-    "C:\\Users\\anass\\.nuget\\packages\\system.security.cryptography.pkcs\\8.0.1\\system.security.cryptography.pkcs.8.0.1.nupkg.sha512",
+    "C:\\Users\\anass\\.nuget\\packages\\system.security.cryptography.pkcs\\7.0.3\\system.security.cryptography.pkcs.7.0.3.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.security.cryptography.protecteddata\\6.0.0\\system.security.cryptography.protecteddata.6.0.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.security.permissions\\6.0.0\\system.security.permissions.6.0.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.security.principal.windows\\5.0.0\\system.security.principal.windows.5.0.0.nupkg.sha512",
-    "C:\\Users\\anass\\.nuget\\packages\\system.text.encoding.codepages\\6.0.0\\system.text.encoding.codepages.6.0.0.nupkg.sha512",
+    "C:\\Users\\anass\\.nuget\\packages\\system.text.encoding.codepages\\7.0.0\\system.text.encoding.codepages.7.0.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.text.json\\8.0.0\\system.text.json.8.0.0.nupkg.sha512",
     "C:\\Users\\anass\\.nuget\\packages\\system.threading.channels\\6.0.0\\system.threading.channels.6.0.0.nupkg.sha512",
@@ -108,6 +108,18 @@
       "warningLevel": 1,
       "filePath": "C:\\Users\\anass\\OneDrive\\Desktop\\Proyectos Personales\\InsuranceClaims\\InsuranceClaims.Infrastructure\\InsuranceClaims.Infrastructure.csproj",
       "libraryId": "System.IdentityModel.Tokens.Jwt",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'MailKit' 4.3.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-9j88-vvj5-vhgr",
+      "projectPath": "C:\\Users\\anass\\OneDrive\\Desktop\\Proyectos Personales\\InsuranceClaims\\InsuranceClaims.Infrastructure\\InsuranceClaims.Infrastructure.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Users\\anass\\OneDrive\\Desktop\\Proyectos Personales\\InsuranceClaims\\InsuranceClaims.Infrastructure\\InsuranceClaims.Infrastructure.csproj",
+      "libraryId": "MailKit",
       "targetGraphs": [
         "net8.0"
       ]

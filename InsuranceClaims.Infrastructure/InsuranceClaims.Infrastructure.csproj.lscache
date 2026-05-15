@@ -66,7 +66,9 @@ obj/Debug/net8.0/
 Services/
  AuthService.cs
  ClaimService.cs
+ DashboardService.cs
  DocumentService.cs
+ EmailService.cs
  TokenService.cs
 
 [metadataReferences]
@@ -76,8 +78,8 @@ Services/
  automapper/12.0.1/lib/netstandard2.1/AutoMapper.dll
  azure.core/1.38.0/lib/net6.0/Azure.Core.dll
  azure.identity/1.11.4/lib/netstandard2.0/Azure.Identity.dll
- bouncycastle.cryptography/2.6.2/lib/net6.0/BouncyCastle.Cryptography.dll
- mailkit/4.16.0/lib/net8.0/MailKit.dll
+ bouncycastle.cryptography/2.2.1/lib/net6.0/BouncyCastle.Cryptography.dll
+ mailkit/4.3.0/lib/net6.0/MailKit.dll
  microsoft.aspnetcore.app.ref/8.0.27/ref/net8.0/
   Microsoft.AspNetCore.Antiforgery.dll
   Microsoft.AspNetCore.Authentication.Abstractions.dll
@@ -399,11 +401,11 @@ Services/
   System.Xml.XPath.XDocument.dll
   WindowsBase.dll
  microsoft.sqlserver.server/1.0.0/lib/netstandard2.0/Microsoft.SqlServer.Server.dll
- mimekit/4.16.0/lib/net8.0/MimeKit.dll
+ mimekit/4.3.0/lib/net6.0/MimeKit.dll
  system.clientmodel/1.0.0/lib/net6.0/System.ClientModel.dll
  system.identitymodel.tokens.jwt/8.1.0/lib/net8.0/System.IdentityModel.Tokens.Jwt.dll
  system.memory.data/1.0.2/lib/netstandard2.0/System.Memory.Data.dll
- system.security.cryptography.pkcs/8.0.1/lib/net8.0/System.Security.Cryptography.Pkcs.dll
+ system.security.cryptography.pkcs/7.0.3/lib/net7.0/System.Security.Cryptography.Pkcs.dll
  system.security.cryptography.protecteddata/6.0.0/lib/net6.0/System.Security.Cryptography.ProtectedData.dll
 
 [analyzerReferences]

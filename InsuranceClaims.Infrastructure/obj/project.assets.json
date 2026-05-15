@@ -76,7 +76,7 @@
           }
         }
       },
-      "BouncyCastle.Cryptography/2.6.2": {
+      "BouncyCastle.Cryptography/2.2.1": {
         "type": "package",
         "compile": {
           "lib/net6.0/BouncyCastle.Cryptography.dll": {
@@ -102,19 +102,18 @@
           }
         }
       },
-      "MailKit/4.16.0": {
+      "MailKit/4.3.0": {
         "type": "package",
         "dependencies": {
-          "MimeKit": "4.16.0",
-          "System.Formats.Asn1": "8.0.1"
+          "MimeKit": "4.3.0"
         },
         "compile": {
-          "lib/net8.0/MailKit.dll": {
+          "lib/net6.0/MailKit.dll": {
             "related": ".dll.config;.pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net8.0/MailKit.dll": {
+          "lib/net6.0/MailKit.dll": {
             "related": ".dll.config;.pdb;.xml"
           }
         }
@@ -1138,19 +1137,21 @@
           }
         }
       },
-      "MimeKit/4.16.0": {
+      "MimeKit/4.3.0": {
         "type": "package",
         "dependencies": {
-          "BouncyCastle.Cryptography": "2.6.2",
-          "System.Security.Cryptography.Pkcs": "8.0.1"
+          "BouncyCastle.Cryptography": "2.2.1",
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0",
+          "System.Security.Cryptography.Pkcs": "7.0.3",
+          "System.Text.Encoding.CodePages": "7.0.0"
         },
         "compile": {
-          "lib/net8.0/MimeKit.dll": {
+          "lib/net6.0/MimeKit.dll": {
             "related": ".dll.config;.pdb;.xml"
           }
         },
         "runtime": {
-          "lib/net8.0/MimeKit.dll": {
+          "lib/net6.0/MimeKit.dll": {
             "related": ".dll.config;.pdb;.xml"
           }
         }
@@ -1574,15 +1575,18 @@
           }
         }
       },
-      "System.Security.Cryptography.Pkcs/8.0.1": {
+      "System.Security.Cryptography.Pkcs/7.0.3": {
         "type": "package",
+        "dependencies": {
+          "System.Formats.Asn1": "7.0.0"
+        },
         "compile": {
-          "lib/net8.0/System.Security.Cryptography.Pkcs.dll": {
+          "lib/net7.0/System.Security.Cryptography.Pkcs.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net8.0/System.Security.Cryptography.Pkcs.dll": {
+          "lib/net7.0/System.Security.Cryptography.Pkcs.dll": {
             "related": ".xml"
           }
         },
@@ -1590,7 +1594,7 @@
           "buildTransitive/net6.0/_._": {}
         },
         "runtimeTargets": {
-          "runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll": {
+          "runtimes/win/lib/net7.0/System.Security.Cryptography.Pkcs.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -1661,26 +1665,23 @@
           }
         }
       },
-      "System.Text.Encoding.CodePages/6.0.0": {
+      "System.Text.Encoding.CodePages/7.0.0": {
         "type": "package",
-        "dependencies": {
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        },
         "compile": {
-          "lib/net6.0/_._": {
+          "lib/net7.0/System.Text.Encoding.CodePages.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net6.0/System.Text.Encoding.CodePages.dll": {
+          "lib/net7.0/System.Text.Encoding.CodePages.dll": {
             "related": ".xml"
           }
         },
         "build": {
-          "buildTransitive/netcoreapp3.1/_._": {}
+          "buildTransitive/net6.0/_._": {}
         },
         "runtimeTargets": {
-          "runtimes/win/lib/net6.0/System.Text.Encoding.CodePages.dll": {
+          "runtimes/win/lib/net7.0/System.Text.Encoding.CodePages.dll": {
             "assetType": "runtime",
             "rid": "win"
           }
@@ -1858,16 +1859,16 @@
         "lib/netstandard2.0/Azure.Identity.xml"
       ]
     },
-    "BouncyCastle.Cryptography/2.6.2": {
-      "sha512": "7oWOcvnntmMKNzDLsdxAYqApt+AjpRpP2CShjMfIa3umZ42UQMvH0tl1qAliYPNYO6vTdcGMqnRrCPmsfzTI1w==",
+    "BouncyCastle.Cryptography/2.2.1": {
+      "sha512": "A6Zr52zVqJKt18ZBsTnX0qhG0kwIQftVAjLmszmkiR/trSp8H+xj1gUOzk7XHwaKgyREMSV1v9XaKrBUeIOdvQ==",
       "type": "package",
-      "path": "bouncycastle.cryptography/2.6.2",
+      "path": "bouncycastle.cryptography/2.2.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.md",
         "README.md",
-        "bouncycastle.cryptography.2.6.2.nupkg.sha512",
+        "bouncycastle.cryptography.2.2.1.nupkg.sha512",
         "bouncycastle.cryptography.nuspec",
         "lib/net461/BouncyCastle.Cryptography.dll",
         "lib/net461/BouncyCastle.Cryptography.xml",
@@ -1896,10 +1897,10 @@
         "logo.png"
       ]
     },
-    "MailKit/4.16.0": {
-      "sha512": "trJ82DOpAmo8i1jO1vNE+dGn4mPRyeYfy4swRcAGgMJhPoI1Kohf4OFJJf0+YIj4iUxgxPn8W+ht7e7KiYzSjg==",
+    "MailKit/4.3.0": {
+      "sha512": "jVmB3Nr0JpqhyMiXOGWMin+QvRKpucGpSFBCav9dG6jEJPdBV+yp1RHVpKzxZPfT+0adaBuZlMFdbIciZo1EWA==",
       "type": "package",
-      "path": "mailkit/4.16.0",
+      "path": "mailkit/4.3.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -1908,10 +1909,6 @@
         "docs/GMailOAuth2.md",
         "docs/README.md",
         "icons/mailkit-50.png",
-        "lib/net10.0/MailKit.dll",
-        "lib/net10.0/MailKit.dll.config",
-        "lib/net10.0/MailKit.pdb",
-        "lib/net10.0/MailKit.xml",
         "lib/net462/MailKit.dll",
         "lib/net462/MailKit.dll.config",
         "lib/net462/MailKit.pdb",
@@ -1924,10 +1921,10 @@
         "lib/net48/MailKit.dll.config",
         "lib/net48/MailKit.pdb",
         "lib/net48/MailKit.xml",
-        "lib/net8.0/MailKit.dll",
-        "lib/net8.0/MailKit.dll.config",
-        "lib/net8.0/MailKit.pdb",
-        "lib/net8.0/MailKit.xml",
+        "lib/net6.0/MailKit.dll",
+        "lib/net6.0/MailKit.dll.config",
+        "lib/net6.0/MailKit.pdb",
+        "lib/net6.0/MailKit.xml",
         "lib/netstandard2.0/MailKit.dll",
         "lib/netstandard2.0/MailKit.dll.config",
         "lib/netstandard2.0/MailKit.pdb",
@@ -1936,7 +1933,7 @@
         "lib/netstandard2.1/MailKit.dll.config",
         "lib/netstandard2.1/MailKit.pdb",
         "lib/netstandard2.1/MailKit.xml",
-        "mailkit.4.16.0.nupkg.sha512",
+        "mailkit.4.3.0.nupkg.sha512",
         "mailkit.nuspec"
       ]
     },
@@ -3457,33 +3454,32 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "MimeKit/4.16.0": {
-      "sha512": "X0LFxeM4gPRIhODyY/HYS9b+zRZ7y//v59rFzgS6wLxcPuZThnMtNZHtrr0fjLyRRkg3gqJBtvW36XfUzZ7Djw==",
+    "MimeKit/4.3.0": {
+      "sha512": "39KDXuERDy5VmHIn7NnCWvIVp/Ar4qnxZWg9m06DfRqDbW1B6zFv9o3Tdoa4CCu71tE/0SRqRCN5Z+bbffw6uw==",
       "type": "package",
-      "path": "mimekit/4.16.0",
+      "path": "mimekit/4.3.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "docs/FAQ.md",
         "docs/README.md",
         "icons/mimekit-50.png",
-        "lib/net10.0/MimeKit.dll",
-        "lib/net10.0/MimeKit.dll.config",
-        "lib/net10.0/MimeKit.pdb",
-        "lib/net10.0/MimeKit.xml",
         "lib/net462/MimeKit.dll",
+        "lib/net462/MimeKit.dll.config",
         "lib/net462/MimeKit.pdb",
         "lib/net462/MimeKit.xml",
         "lib/net47/MimeKit.dll",
+        "lib/net47/MimeKit.dll.config",
         "lib/net47/MimeKit.pdb",
         "lib/net47/MimeKit.xml",
         "lib/net48/MimeKit.dll",
+        "lib/net48/MimeKit.dll.config",
         "lib/net48/MimeKit.pdb",
         "lib/net48/MimeKit.xml",
-        "lib/net8.0/MimeKit.dll",
-        "lib/net8.0/MimeKit.dll.config",
-        "lib/net8.0/MimeKit.pdb",
-        "lib/net8.0/MimeKit.xml",
+        "lib/net6.0/MimeKit.dll",
+        "lib/net6.0/MimeKit.dll.config",
+        "lib/net6.0/MimeKit.pdb",
+        "lib/net6.0/MimeKit.xml",
         "lib/netstandard2.0/MimeKit.dll",
         "lib/netstandard2.0/MimeKit.dll.config",
         "lib/netstandard2.0/MimeKit.pdb",
@@ -3492,7 +3488,7 @@
         "lib/netstandard2.1/MimeKit.dll.config",
         "lib/netstandard2.1/MimeKit.pdb",
         "lib/netstandard2.1/MimeKit.xml",
-        "mimekit.4.16.0.nupkg.sha512",
+        "mimekit.4.3.0.nupkg.sha512",
         "mimekit.nuspec"
       ]
     },
@@ -4153,10 +4149,10 @@
         "version.txt"
       ]
     },
-    "System.Security.Cryptography.Pkcs/8.0.1": {
-      "sha512": "CoCRHFym33aUSf/NtWSVSZa99dkd0Hm7OCZUxORBjRB16LNhIEOf8THPqzIYlvKM0nNDAPTRBa1FxEECrgaxxA==",
+    "System.Security.Cryptography.Pkcs/7.0.3": {
+      "sha512": "yhwEHH5Gzl/VoADrXtt5XC95OFoSjNSWLHNutE7GwdOgefZVRvEXRSooSpL8HHm3qmdd9epqzsWg28UJemt22w==",
       "type": "package",
-      "path": "system.security.cryptography.pkcs/8.0.1",
+      "path": "system.security.cryptography.pkcs/7.0.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -4173,8 +4169,6 @@
         "lib/net6.0/System.Security.Cryptography.Pkcs.xml",
         "lib/net7.0/System.Security.Cryptography.Pkcs.dll",
         "lib/net7.0/System.Security.Cryptography.Pkcs.xml",
-        "lib/net8.0/System.Security.Cryptography.Pkcs.dll",
-        "lib/net8.0/System.Security.Cryptography.Pkcs.xml",
         "lib/netstandard2.0/System.Security.Cryptography.Pkcs.dll",
         "lib/netstandard2.0/System.Security.Cryptography.Pkcs.xml",
         "lib/netstandard2.1/System.Security.Cryptography.Pkcs.dll",
@@ -4183,9 +4177,7 @@
         "runtimes/win/lib/net6.0/System.Security.Cryptography.Pkcs.xml",
         "runtimes/win/lib/net7.0/System.Security.Cryptography.Pkcs.dll",
         "runtimes/win/lib/net7.0/System.Security.Cryptography.Pkcs.xml",
-        "runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.dll",
-        "runtimes/win/lib/net8.0/System.Security.Cryptography.Pkcs.xml",
-        "system.security.cryptography.pkcs.8.0.1.nupkg.sha512",
+        "system.security.cryptography.pkcs.7.0.3.nupkg.sha512",
         "system.security.cryptography.pkcs.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -4309,41 +4301,39 @@
         "version.txt"
       ]
     },
-    "System.Text.Encoding.CodePages/6.0.0": {
-      "sha512": "ZFCILZuOvtKPauZ/j/swhvw68ZRi9ATCfvGbk1QfydmcXBkIWecWKn/250UH7rahZ5OoDBaiAudJtPvLwzw85A==",
+    "System.Text.Encoding.CodePages/7.0.0": {
+      "sha512": "LSyCblMpvOe0N3E+8e0skHcrIhgV2huaNcjUUEa8hRtgEAm36aGkRoC8Jxlb6Ra6GSfF29ftduPNywin8XolzQ==",
       "type": "package",
-      "path": "system.text.encoding.codepages/6.0.0",
+      "path": "system.text.encoding.codepages/7.0.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "Icon.png",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/System.Text.Encoding.CodePages.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
         "buildTransitive/netcoreapp2.0/System.Text.Encoding.CodePages.targets",
-        "buildTransitive/netcoreapp3.1/_._",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
-        "lib/net461/System.Text.Encoding.CodePages.dll",
-        "lib/net461/System.Text.Encoding.CodePages.xml",
+        "lib/net462/System.Text.Encoding.CodePages.dll",
+        "lib/net462/System.Text.Encoding.CodePages.xml",
         "lib/net6.0/System.Text.Encoding.CodePages.dll",
         "lib/net6.0/System.Text.Encoding.CodePages.xml",
-        "lib/netcoreapp3.1/System.Text.Encoding.CodePages.dll",
-        "lib/netcoreapp3.1/System.Text.Encoding.CodePages.xml",
+        "lib/net7.0/System.Text.Encoding.CodePages.dll",
+        "lib/net7.0/System.Text.Encoding.CodePages.xml",
         "lib/netstandard2.0/System.Text.Encoding.CodePages.dll",
         "lib/netstandard2.0/System.Text.Encoding.CodePages.xml",
         "lib/xamarinios10/_._",
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "runtimes/win/lib/net461/System.Text.Encoding.CodePages.dll",
-        "runtimes/win/lib/net461/System.Text.Encoding.CodePages.xml",
         "runtimes/win/lib/net6.0/System.Text.Encoding.CodePages.dll",
         "runtimes/win/lib/net6.0/System.Text.Encoding.CodePages.xml",
-        "runtimes/win/lib/netcoreapp3.1/System.Text.Encoding.CodePages.dll",
-        "runtimes/win/lib/netcoreapp3.1/System.Text.Encoding.CodePages.xml",
-        "runtimes/win/lib/netstandard2.0/System.Text.Encoding.CodePages.dll",
-        "runtimes/win/lib/netstandard2.0/System.Text.Encoding.CodePages.xml",
-        "system.text.encoding.codepages.6.0.0.nupkg.sha512",
+        "runtimes/win/lib/net7.0/System.Text.Encoding.CodePages.dll",
+        "runtimes/win/lib/net7.0/System.Text.Encoding.CodePages.xml",
+        "system.text.encoding.codepages.7.0.0.nupkg.sha512",
         "system.text.encoding.codepages.nuspec",
         "useSharedDesignerContext.txt"
       ]
@@ -4553,7 +4543,7 @@
     "net8.0": [
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
       "InsuranceClaims.Core >= 1.0.0",
-      "MailKit >= 4.16.0",
+      "MailKit >= 4.3.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.11",
       "Microsoft.AspNetCore.Hosting.Abstractions >= 2.2.0",
       "Microsoft.AspNetCore.Http.Abstractions >= 2.2.0",
@@ -4619,7 +4609,7 @@
           },
           "MailKit": {
             "target": "Package",
-            "version": "[4.16.0, )"
+            "version": "[4.3.0, )"
           },
           "Microsoft.AspNetCore.Authentication.JwtBearer": {
             "target": "Package",
@@ -4697,6 +4687,16 @@
       "warningLevel": 1,
       "message": "InsuranceClaims.Infrastructure depends on System.IdentityModel.Tokens.Jwt (>= 8.0.11) but System.IdentityModel.Tokens.Jwt 8.0.11 was not found. System.IdentityModel.Tokens.Jwt 8.1.0 was resolved instead.",
       "libraryId": "System.IdentityModel.Tokens.Jwt",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'MailKit' 4.3.0 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-9j88-vvj5-vhgr",
+      "libraryId": "MailKit",
       "targetGraphs": [
         "net8.0"
       ]

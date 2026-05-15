@@ -65,7 +65,9 @@ DTOs/Claims/
  UpdateClaimDto.cs
  UpdateClaimStatusDto.cs
 DTOs/
+ Dashboard/DashboardStatsDto.cs
  Documents/DocumentResponseDto.cs
+ EmailSettings.cs
  PagedResult.cs
 Entities/
  ApplicationUser.cs
@@ -78,7 +80,9 @@ Enums/ClaimStatusEnum.cs
 Interfaces/
  IAuthService.cs
  IClaimService.cs
+ IDashboardService.cs
  IDocumentService.cs
+ IEmailService.cs
 obj/Debug/net8.0/
  .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
  InsuranceClaims.Core.AssemblyInfo.cs

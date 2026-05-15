@@ -11,10 +11,12 @@ namespace InsuranceClaims.Infrastructure.Services;
 public class ClaimService : IClaimService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IEmailService _emailService;
 
-    public ClaimService(ApplicationDbContext context)
+    public ClaimService(ApplicationDbContext context, IEmailService emailService)
     {
         _context = context;
+        _emailService = emailService;
     }
 
     public async Task<PagedResult<ClaimResponseDto>> GetAllAsync(ClaimFilterDto filter)
@@ -109,6 +111,23 @@ public class ClaimService : IClaimService
         _context.ClaimStatusHistories.Add(history);
         await _context.SaveChangesAsync();
 
+        // Enviar email de confirmación
+        try
+        {
+            var client = await _context.Users.FindAsync(dto.ClientId);
+            if (client != null && !string.IsNullOrEmpty(client.Email))
+            {
+                await _emailService.SendClaimCreatedAsync(
+                    client.Email,
+                    $"{client.FirstName} {client.LastName}",
+                    claim.Id,
+                    claim.Title
+                );
+            }
+        }
+        catch { /* No interrumpir si falla el email */ }
+
+
         return await GetByIdAsync(claim.Id);
     }
 
@@ -148,6 +167,42 @@ public class ClaimService : IClaimService
 
         _context.ClaimStatusHistories.Add(history);
         await _context.SaveChangesAsync();
+
+// Enviar email de cambio de estado
+        try
+        {
+            var claimWithClient = await _context.Claims
+                .Include(c => c.Client)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (claimWithClient?.Client?.Email != null)
+            {
+                if (dto.Status == Core.Enums.ClaimStatusType.Closed)
+                {
+                    await _emailService.SendClaimClosedAsync(
+                        claimWithClient.Client.Email,
+                        $"{claimWithClient.Client.FirstName} {claimWithClient.Client.LastName}",
+                        id,
+                        claimWithClient.Title,
+                        dto.Status.ToString()
+                    );
+                }
+                else
+                {
+                    await _emailService.SendStatusChangedAsync(
+                        claimWithClient.Client.Email,
+                        $"{claimWithClient.Client.FirstName} {claimWithClient.Client.LastName}",
+                        id,
+                        claimWithClient.Title,
+                        dto.Status.ToString(),
+                        dto.Comment
+                    );
+                }
+            }
+        }
+        catch { /* No interrumpir si falla el email */ }
+
+
         return await GetByIdAsync(id);
     }
 
