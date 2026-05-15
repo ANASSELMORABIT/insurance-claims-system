@@ -63,6 +63,7 @@ builder.Services.AddCors(options =>
 // Services
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IClaimService, ClaimService>();
 
 // Swagger con JWT
 builder.Services.AddSwaggerGen(c =>

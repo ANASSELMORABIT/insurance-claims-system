@@ -53,7 +53,9 @@ TemporaryDependencyNodeTargetIdentifier=net8.0
 /warnaserror+:NU1605,SYSLIB0011
 
 [sourceFiles]
-Controllers/AuthController.cs
+Controllers/
+ AuthController.cs
+ ClaimsController.cs
 obj/Debug/net8.0/
  .NETCoreApp,Version=v8.0.AssemblyAttributes.cs
  InsuranceClaims.API.AssemblyInfo.cs
