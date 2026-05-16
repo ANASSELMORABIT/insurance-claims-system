@@ -65,4 +65,74 @@ public class AuthController : ControllerBase
             return NotFound(new { message = ex.Message });
         }
     }
+
+
+
+    [Authorize]
+[HttpGet("profile/stats")]
+public async Task<IActionResult> GetProfileStats()
+{
+    try
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? User.FindFirstValue("sub");
+
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var result = await _authService.GetProfileStatsAsync(userId);
+        return Ok(result);
+    }
+    catch (KeyNotFoundException ex)
+    {
+        return NotFound(new { message = ex.Message });
+    }
+}
+
+[Authorize]
+[HttpPut("profile")]
+public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
+{
+    try
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? User.FindFirstValue("sub");
+
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        var result = await _authService.UpdateProfileAsync(userId, dto);
+        return Ok(result);
+    }
+    catch (KeyNotFoundException ex)
+    {
+        return NotFound(new { message = ex.Message });
+    }
+    catch (InvalidOperationException ex)
+    {
+        return BadRequest(new { message = ex.Message });
+    }
+}
+
+[Authorize]
+[HttpPut("change-password")]
+public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto dto)
+{
+    try
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            ?? User.FindFirstValue("sub");
+
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+
+        await _authService.ChangePasswordAsync(userId, dto);
+        return Ok(new { message = "Password changed successfully." });
+    }
+    catch (KeyNotFoundException ex)
+    {
+        return NotFound(new { message = ex.Message });
+    }
+    catch (InvalidOperationException ex)
+    {
+        return BadRequest(new { message = ex.Message });
+    }
+}
 }
