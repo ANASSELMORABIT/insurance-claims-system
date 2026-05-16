@@ -2,10 +2,32 @@ import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 
-const navItems = [
-  { to: "/dashboard", icon: "▪", label: "Dashboard" },
-  { to: "/claims", icon: "▪", label: "Claims" },
+interface NavItem {
+  to: string;
+  icon: string;
+  label: string;
+  roles: string[];
+}
+
+const navItems: NavItem[] = [
+  { to: "/dashboard", icon: "📊", label: "Dashboard", roles: ["Admin", "Agent", "Client"] },
+  { to: "/claims",    icon: "📋", label: "Claims",    roles: ["Admin", "Agent", "Client"] },
+  { to: "/users",     icon: "👥", label: "Users",     roles: ["Admin"] },
+  { to: "/policies",  icon: "📜", label: "Policies",  roles: ["Admin", "Agent"] },
+  { to: "/profile",   icon: "👤", label: "Profile",   roles: ["Admin", "Agent", "Client"] },
 ];
+
+const roleColors: Record<string, string> = {
+  Admin: "#FF6B6B",
+  Agent: "#00FF94",
+  Client: "#FFB800",
+};
+
+const roleBg: Record<string, string> = {
+  Admin: "rgba(255,107,107,0.1)",
+  Agent: "rgba(0,255,148,0.1)",
+  Client: "rgba(255,184,0,0.1)",
+};
 
 export default function Layout() {
   const { user, logout } = useAuth();
@@ -16,6 +38,10 @@ export default function Layout() {
     logout();
     navigate("/login");
   };
+
+  const visibleNav = navItems.filter(item =>
+    user?.role && item.roles.includes(user.role)
+  );
 
   return (
     <div style={{
@@ -31,8 +57,7 @@ export default function Layout() {
         display: "flex", flexDirection: "column",
         transition: "width 0.3s ease",
         position: "fixed", top: 0, left: 0, bottom: 0,
-        zIndex: 100,
-        backdropFilter: "blur(20px)",
+        zIndex: 100, backdropFilter: "blur(20px)",
       }}>
         {/* Logo */}
         <div style={{
@@ -54,8 +79,7 @@ export default function Layout() {
                 fontFamily: "'Syne', sans-serif",
                 fontWeight: 800, fontSize: "14px",
                 background: "linear-gradient(90deg, #00D4FF, #00FF94)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
               }}>InsureClaims</span>
             </div>
           )}
@@ -68,14 +92,34 @@ export default function Layout() {
               cursor: "pointer", padding: "4px 8px",
               fontSize: "12px", transition: "all 0.2s",
             }}
-          >
-            {collapsed ? "›" : "‹"}
-          </button>
+          >{collapsed ? "›" : "‹"}</button>
         </div>
 
-        {/* Nav */}
+        {/* Role Badge */}
+        {!collapsed && user && (
+          <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: "6px",
+              padding: "4px 10px", borderRadius: "20px",
+              background: roleBg[user.role] || "rgba(255,255,255,0.05)",
+              border: `1px solid ${roleColors[user.role] || "#64748b"}30`,
+            }}>
+              <div style={{
+                width: "6px", height: "6px", borderRadius: "50%",
+                background: roleColors[user.role] || "#64748b",
+              }} />
+              <span style={{
+                fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px",
+                color: roleColors[user.role] || "#64748b",
+                textTransform: "uppercase",
+              }}>{user.role}</span>
+            </div>
+          </div>
+        )}
+
+        {/* Nav — filtrado por rol */}
         <nav style={{ flex: 1, padding: "16px 12px" }}>
-          {navItems.map(item => (
+          {visibleNav.map(item => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -92,35 +136,45 @@ export default function Layout() {
                 justifyContent: collapsed ? "center" : "flex-start",
               })}
             >
-              <span style={{ fontSize: "16px" }}>
-                {item.to === "/dashboard" ? "📊" : "📋"}
-              </span>
+              <span style={{ fontSize: "16px", flexShrink: 0 }}>{item.icon}</span>
               {!collapsed && item.label}
             </NavLink>
           ))}
         </nav>
 
-        {/* User */}
-        <div style={{
-          padding: "16px 12px",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
-        }}>
+        {/* User info + logout */}
+        <div style={{ padding: "16px 12px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           {!collapsed && (
-            <div style={{
-              padding: "12px",
-              background: "rgba(255,255,255,0.03)",
-              borderRadius: "8px", marginBottom: "8px",
-              border: "1px solid rgba(255,255,255,0.06)",
-            }}>
-              <div style={{ fontSize: "13px", fontWeight: 600, color: "#e2e8f0" }}>
-                {user?.firstName} {user?.lastName}
-              </div>
-              <div style={{
-                fontSize: "11px", marginTop: "2px",
-                color: "#00D4FF", letterSpacing: "1px",
-                textTransform: "uppercase",
-              }}>
-                {user?.role}
+            <div
+              onClick={() => navigate("/profile")}
+              style={{
+                padding: "12px",
+                background: "rgba(255,255,255,0.03)",
+                borderRadius: "8px", marginBottom: "8px",
+                border: "1px solid rgba(255,255,255,0.06)",
+                cursor: "pointer", transition: "all 0.2s",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(0,212,255,0.2)")}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)")}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                {/* Avatar con iniciales */}
+                <div style={{
+                  width: "32px", height: "32px", borderRadius: "8px",
+                  background: `linear-gradient(135deg, ${roleColors[user?.role || ""] || "#00D4FF"}, #00D4FF)`,
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  fontSize: "13px", fontWeight: 700, color: "#070710", flexShrink: 0,
+                }}>
+                  {user?.firstName?.[0]}{user?.lastName?.[0]}
+                </div>
+                <div style={{ overflow: "hidden" }}>
+                  <div style={{ fontSize: "13px", fontWeight: 600, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {user?.firstName} {user?.lastName}
+                  </div>
+                  <div style={{ fontSize: "11px", color: "#475569", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {user?.email}
+                  </div>
+                </div>
               </div>
             </div>
           )}
@@ -150,8 +204,7 @@ export default function Layout() {
         flex: 1,
         marginLeft: collapsed ? "64px" : "240px",
         transition: "margin-left 0.3s ease",
-        minHeight: "100vh",
-        padding: "32px",
+        minHeight: "100vh", padding: "32px",
       }}>
         <Outlet />
       </main>
