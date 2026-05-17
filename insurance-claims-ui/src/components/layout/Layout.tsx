@@ -1,6 +1,7 @@
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
+import NotificationBell from "../notifications/NotificationBell";
 
 interface NavItem {
   to: string;
@@ -117,7 +118,7 @@ export default function Layout() {
           </div>
         )}
 
-        {/* Nav — filtrado por rol */}
+        {/* Nav */}
         <nav style={{ flex: 1, padding: "16px 12px" }}>
           {visibleNav.map(item => (
             <NavLink
@@ -158,7 +159,6 @@ export default function Layout() {
               onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)")}
             >
               <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                {/* Avatar con iniciales */}
                 <div style={{
                   width: "32px", height: "32px", borderRadius: "8px",
                   background: `linear-gradient(135deg, ${roleColors[user?.role || ""] || "#00D4FF"}, #00D4FF)`,
@@ -204,9 +204,25 @@ export default function Layout() {
         flex: 1,
         marginLeft: collapsed ? "64px" : "240px",
         transition: "margin-left 0.3s ease",
-        minHeight: "100vh", padding: "32px",
+        minHeight: "100vh",
       }}>
-        <Outlet />
+        {/* Top Header con NotificationBell */}
+        <div style={{
+          height: "60px", padding: "0 32px",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          display: "flex", alignItems: "center",
+          justifyContent: "flex-end", gap: "12px",
+          background: "rgba(255,255,255,0.01)",
+          backdropFilter: "blur(10px)",
+          position: "sticky", top: 0, zIndex: 50,
+        }}>
+          <NotificationBell />
+        </div>
+
+        {/* Content */}
+        <div style={{ padding: "32px" }}>
+          <Outlet />
+        </div>
       </main>
     </div>
   );

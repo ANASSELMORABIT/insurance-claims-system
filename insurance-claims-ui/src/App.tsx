@@ -9,6 +9,9 @@ import ClaimsList from "./pages/claims/ClaimsList";
 import ClaimDetail from "./pages/claims/ClaimDetail";
 import ClaimForm from "./pages/claims/ClaimForm";
 import Profile from "./pages/profile/Profile";
+import UsersList from "./pages/users/UsersList";
+import PoliciesList from "./pages/policies/PoliciesList";
+
 
 const queryClient = new QueryClient();
 
@@ -50,18 +53,12 @@ function AppRoutes() {
         {/* Placeholders para fases siguientes */}
         <Route path="users" element={
           <RoleRoute roles={["Admin"]}>
-            <div style={{ color: "#e2e8f0", fontFamily: "'Syne', sans-serif" }}>
-              <h1 style={{ fontSize: "28px", fontWeight: 800 }}>Users</h1>
-              <p style={{ color: "#64748b", marginTop: "8px" }}>Coming in Phase C...</p>
-            </div>
+            <UsersList />
           </RoleRoute>
         } />
         <Route path="policies" element={
           <RoleRoute roles={["Admin", "Agent"]}>
-            <div style={{ color: "#e2e8f0", fontFamily: "'Syne', sans-serif" }}>
-              <h1 style={{ fontSize: "28px", fontWeight: 800 }}>Policies</h1>
-              <p style={{ color: "#64748b", marginTop: "8px" }}>Coming in Phase D...</p>
-            </div>
+            <PoliciesList />
           </RoleRoute>
         } />
       </Route>

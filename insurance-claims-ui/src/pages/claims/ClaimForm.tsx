@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { claimsService } from "../../services/claimsService";
+import { useQuery } from "@tanstack/react-query";
+import { policyService } from "../../services/policyService";
 
 export default function ClaimForm() {
   const navigate = useNavigate();
@@ -15,9 +17,14 @@ export default function ClaimForm() {
     type: "1",
     incidentDate: "",
     estimatedAmount: "",
-    policyId: "1",
-    clientId: "admin-user-id-001",  // ← ID real del admin
-});
+    policyId: "",
+    clientId: "admin-user-id-001",
+  });
+
+  const { data: policies } = useQuery({
+    queryKey: ["policies-all"],
+    queryFn: () => policyService.getAll({ pageSize: 100, activeOnly: true }),
+  });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -77,6 +84,7 @@ export default function ClaimForm() {
       <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "16px", padding: "32px" }}>
         <form onSubmit={handleSubmit}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginBottom: "20px" }}>
+
             <div style={{ gridColumn: "1 / -1" }}>
               <label style={labelStyle}>Title</label>
               <input name="title" value={form.title} onChange={handleChange} required placeholder="Brief description of the claim" style={inputStyle}
@@ -84,6 +92,7 @@ export default function ClaimForm() {
                 onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
               />
             </div>
+
             <div>
               <label style={labelStyle}>Type</label>
               <select name="type" value={form.type} onChange={handleChange} style={inputStyle}>
@@ -94,6 +103,7 @@ export default function ClaimForm() {
                 <option value="5">✈️ Travel</option>
               </select>
             </div>
+
             <div>
               <label style={labelStyle}>Incident Date</label>
               <input name="incidentDate" type="date" value={form.incidentDate} onChange={handleChange} required style={inputStyle}
@@ -101,6 +111,7 @@ export default function ClaimForm() {
                 onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
               />
             </div>
+
             <div>
               <label style={labelStyle}>Estimated Amount ($)</label>
               <input name="estimatedAmount" type="number" value={form.estimatedAmount} onChange={handleChange} placeholder="0.00" style={inputStyle}
@@ -108,29 +119,41 @@ export default function ClaimForm() {
                 onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
               />
             </div>
+
             <div>
-              <label style={labelStyle}>Policy ID</label>
-              <input name="policyId" type="number" value={form.policyId} onChange={handleChange} required style={inputStyle}
-                onFocus={e => (e.target.style.borderColor = "rgba(0,212,255,0.4)")}
-                onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
-              />
+              <label style={labelStyle}>Policy</label>
+              <select name="policyId" value={form.policyId} onChange={handleChange} required style={inputStyle}>
+                <option value="">Select a policy...</option>
+                {policies?.items.map(p => (
+                  <option key={p.id} value={p.id.toString()}>
+                    {p.policyNumber} — {p.holderName}
+                  </option>
+                ))}
+              </select>
+              {policies?.items.length === 0 && (
+                <div style={{ fontSize: "11px", color: "#FF6B6B", marginTop: "4px" }}>
+                  No active policies found. Create one in Policies first.
+                </div>
+              )}
             </div>
+
             <div>
-            <label style={labelStyle}>Client ID</label>
-            <input 
-                name="clientId" 
-                value={form.clientId} 
-                onChange={handleChange} 
-                required 
-                placeholder="User ID of the client" 
+              <label style={labelStyle}>Client ID</label>
+              <input
+                name="clientId"
+                value={form.clientId}
+                onChange={handleChange}
+                required
+                placeholder="User ID of the client"
                 style={inputStyle}
                 onFocus={e => (e.target.style.borderColor = "rgba(0,212,255,0.4)")}
                 onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
-            />
-            <div style={{ fontSize: "11px", color: "#475569", marginTop: "4px" }}>
+              />
+              <div style={{ fontSize: "11px", color: "#475569", marginTop: "4px" }}>
                 Use the user's ID (not email)
+              </div>
             </div>
-            </div>
+
             <div style={{ gridColumn: "1 / -1" }}>
               <label style={labelStyle}>Description</label>
               <textarea name="description" value={form.description} onChange={handleChange} required rows={4} placeholder="Detailed description of the incident..." style={{ ...inputStyle, resize: "vertical" }}

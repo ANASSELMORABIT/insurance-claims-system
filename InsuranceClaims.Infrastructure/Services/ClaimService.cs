@@ -12,11 +12,16 @@ public class ClaimService : IClaimService
 {
     private readonly ApplicationDbContext _context;
     private readonly IEmailService _emailService;
+    private readonly INotificationService _notificationService;
 
-    public ClaimService(ApplicationDbContext context, IEmailService emailService)
+    public ClaimService(
+        ApplicationDbContext context,
+        IEmailService emailService,
+        INotificationService notificationService)
     {
         _context = context;
         _emailService = emailService;
+        _notificationService = notificationService;
     }
 
     public async Task<PagedResult<ClaimResponseDto>> GetAllAsync(ClaimFilterDto filter)
@@ -127,7 +132,17 @@ public class ClaimService : IClaimService
         }
         catch { /* No interrumpir si falla el email */ }
 
-
+        // Notificación in-app
+        try
+        {
+            await _notificationService.CreateAsync(
+                dto.ClientId,
+                "Claim Created",
+                $"Your claim '{claim.Title}' has been submitted successfully.",
+                $"/claims/{claim.Id}"
+            );
+        }
+        catch { }
         return await GetByIdAsync(claim.Id);
     }
 
@@ -166,6 +181,22 @@ public class ClaimService : IClaimService
         };
 
         _context.ClaimStatusHistories.Add(history);
+
+        // Notificación in-app
+        try
+        {
+            var c = await _context.Claims.FindAsync(id);
+            if (c != null)
+            {
+                await _notificationService.CreateAsync(
+                    c.ClientId,
+                    "Claim Status Updated",
+                    $"Your claim status has changed to {dto.Status}.",
+                    $"/claims/{id}"
+                );
+            }
+        }
+        catch { }
         await _context.SaveChangesAsync();
 
 // Enviar email de cambio de estado
