@@ -2,6 +2,10 @@ import { Outlet, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import NotificationBell from "../notifications/NotificationBell";
+import GlobalSearch from "../search/GlobalSearch";
+import ExportButton from "../ui/ExportButton";
+
+
 
 interface NavItem {
   to: string;
@@ -206,7 +210,7 @@ export default function Layout() {
         transition: "margin-left 0.3s ease",
         minHeight: "100vh",
       }}>
-        {/* Top Header con NotificationBell */}
+        {/* Top Header */}
         <div style={{
           height: "60px", padding: "0 32px",
           borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -216,6 +220,7 @@ export default function Layout() {
           backdropFilter: "blur(10px)",
           position: "sticky", top: 0, zIndex: 50,
         }}>
+          <GlobalSearch />
           <NotificationBell />
         </div>
 

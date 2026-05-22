@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../context/AuthContext";
 import { claimsService } from "../../services/claimsService";
 import type { Claim } from "../../types";
+import ExportButton from "../../components/ui/ExportButton";
 
 const statusColor: Record<string, string> = {
   Pending: "#FFB800",
@@ -49,25 +50,30 @@ export default function ClaimsList() {
             {data?.totalCount ?? 0} total claims
           </p>
         </div>
-        {(isAdmin || isAgent) && (
-          <button
-            onClick={() => navigate("/claims/new")}
-            style={{
-              padding: "12px 24px",
-              background: "linear-gradient(135deg, #00D4FF, #00FF94)",
-              border: "none", borderRadius: "10px",
-              color: "#070710", fontWeight: 700,
-              fontSize: "14px", cursor: "pointer",
-              fontFamily: "'Syne', sans-serif",
-              letterSpacing: "0.5px",
-              transition: "opacity 0.2s",
-            }}
-            onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
-            onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
-          >
-            + New Claim
-          </button>
-        )}
+
+        {/* Actions */}
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <ExportButton />
+          {(isAdmin || isAgent) && (
+            <button
+              onClick={() => navigate("/claims/new")}
+              style={{
+                padding: "12px 24px",
+                background: "linear-gradient(135deg, #00D4FF, #00FF94)",
+                border: "none", borderRadius: "10px",
+                color: "#070710", fontWeight: 700,
+                fontSize: "14px", cursor: "pointer",
+                fontFamily: "'Syne', sans-serif",
+                letterSpacing: "0.5px",
+                transition: "opacity 0.2s",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
+              onMouseLeave={e => (e.currentTarget.style.opacity = "1")}
+            >
+              + New Claim
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Filters */}
