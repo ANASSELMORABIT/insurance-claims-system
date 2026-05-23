@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../context/AuthContext";
 import { authService } from "../../services/authService";
 import type { ProfileStats } from "../../services/authService";
+import { useWindowSize } from "../../hooks/useWindowSize";
 
 const roleColors: Record<string, string> = {
   Admin: "#FF6B6B",
@@ -26,6 +27,7 @@ export default function Profile() {
   const { user, login } = useAuth();
   const queryClient = useQueryClient();
   const roleColor = roleColors[user?.role || ""] || "#00D4FF";
+  const { isMobile } = useWindowSize();
 
   const [editing, setEditing] = useState(false);
   const [firstName, setFirstName] = useState(user?.firstName || "");
@@ -186,7 +188,11 @@ export default function Profile() {
         </div>
 
         {!isLoading && stats && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "12px", marginBottom: "32px" }}>
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)",
+            gap: "12px", marginBottom: "32px",
+          }}>
             <StatCard label="Total Claims" value={stats.totalClaims} color="#00D4FF" />
             <StatCard label="Pending" value={stats.pendingClaims} color="#FFB800" />
             <StatCard label="Approved" value={stats.approvedClaims} color="#00FF94" />
@@ -197,7 +203,7 @@ export default function Profile() {
         {editing ? (
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "24px" }}>
             <div style={{ fontSize: "13px", fontWeight: 600, color: "#94a3b8", marginBottom: "20px", letterSpacing: "0.5px" }}>EDIT PROFILE</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: "16px", marginBottom: "16px" }}>
               <div>
                 <label style={labelStyle}>First Name</label>
                 <input value={firstName} onChange={e => setFirstName(e.target.value)} style={inputStyle}
@@ -212,7 +218,7 @@ export default function Profile() {
                   onBlur={e => (e.target.style.borderColor = "rgba(255,255,255,0.08)")}
                 />
               </div>
-              <div style={{ gridColumn: "1 / -1" }}>
+              <div style={{ gridColumn: isMobile ? "1" : "1 / -1" }}>
                 <label style={labelStyle}>Phone Number</label>
                 <input value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} placeholder="+34 600 000 000" style={inputStyle}
                   onFocus={e => (e.target.style.borderColor = "rgba(0,212,255,0.4)")}
@@ -237,7 +243,11 @@ export default function Profile() {
         ) : (
           <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: "24px" }}>
             <div style={{ fontSize: "13px", fontWeight: 600, color: "#94a3b8", marginBottom: "20px", letterSpacing: "0.5px" }}>ACCOUNT INFORMATION</div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+              gap: "16px",
+            }}>
               {[
                 { label: "First Name", value: stats?.firstName || user?.firstName },
                 { label: "Last Name", value: stats?.lastName || user?.lastName },

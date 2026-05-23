@@ -59,3 +59,10 @@ input:focus, select:focus, textarea:focus {
 }
 input::placeholder { color: #475569; }
 select option { background: #0d0d1a; }
+
+/* Mobile bottom nav spacing */
+@media (max-width: 767px) {
+  main > div:last-child {
+    padding-bottom: 80px;
+  }
+}

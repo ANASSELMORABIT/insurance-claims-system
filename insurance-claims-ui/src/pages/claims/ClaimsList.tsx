@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { claimsService } from "../../services/claimsService";
 import type { Claim } from "../../types";
 import ExportButton from "../../components/ui/ExportButton";
+import { useWindowSize } from "../../hooks/useWindowSize";
 
 const statusColor: Record<string, string> = {
   Pending: "#FFB800",
@@ -24,6 +25,7 @@ export default function ClaimsList() {
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
+  const { isMobile } = useWindowSize();
 
   const { data, isLoading } = useQuery({
     queryKey: ["claims", page, statusFilter, typeFilter],
@@ -141,97 +143,155 @@ export default function ClaimsList() {
         )}
       </div>
 
-      {/* Table */}
-      <div style={{
-        background: "rgba(255,255,255,0.03)",
-        border: "1px solid rgba(255,255,255,0.06)",
-        borderRadius: "12px", overflow: "hidden",
-      }}>
-        {/* Table Header */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 80px",
-          gap: "16px", padding: "14px 24px",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-          background: "rgba(255,255,255,0.02)",
-        }}>
-          {["Claim", "Type", "Status", "Client", "Amount", ""].map(h => (
-            <div key={h} style={{ fontSize: "11px", color: "#475569", letterSpacing: "1.5px", textTransform: "uppercase", fontWeight: 600 }}>{h}</div>
-          ))}
-        </div>
-
-        {/* Rows */}
-        {isLoading ? (
-          <div style={{ padding: "48px", textAlign: "center", color: "#475569" }}>Loading...</div>
-        ) : data?.items.length === 0 ? (
-          <div style={{ padding: "64px", textAlign: "center" }}>
-            <div style={{ fontSize: "40px", marginBottom: "16px" }}>📋</div>
-            <div style={{ color: "#64748b", fontSize: "15px" }}>No claims found</div>
-            {(isAdmin || isAgent) && (
-              <button
-                onClick={() => navigate("/claims/new")}
-                style={{
-                  marginTop: "16px", padding: "10px 20px",
-                  background: "rgba(0,212,255,0.1)",
-                  border: "1px solid rgba(0,212,255,0.2)",
-                  borderRadius: "8px", color: "#00D4FF",
-                  cursor: "pointer", fontSize: "13px",
-                }}
-              >
-                Create first claim
-              </button>
-            )}
+      {/* Table — Desktop */}
+      {!isMobile ? (
+        <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: "12px", overflow: "hidden" }}>
+          {/* Table Header */}
+          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 80px", gap: "16px", padding: "14px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(255,255,255,0.02)" }}>
+            {["Claim", "Type", "Status", "Client", "Amount", ""].map(h => (
+              <div key={h} style={{ fontSize: "11px", color: "#475569", letterSpacing: "1.5px", textTransform: "uppercase", fontWeight: 600 }}>{h}</div>
+            ))}
           </div>
-        ) : (
-          data?.items.map((claim: Claim) => (
-            <div
-              key={claim.id}
-              onClick={() => navigate(`/claims/${claim.id}`)}
-              style={{
-                display: "grid",
-                gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 80px",
-                gap: "16px", padding: "16px 24px",
-                borderBottom: "1px solid rgba(255,255,255,0.04)",
-                cursor: "pointer", transition: "background 0.15s",
-              }}
-              onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.02)")}
-              onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
-            >
-              <div>
-                <div style={{ fontSize: "13px", fontWeight: 600, color: "#e2e8f0" }}>
-                  #{claim.id} {claim.title}
-                </div>
-                <div style={{ fontSize: "11px", color: "#475569", marginTop: "3px" }}>
-                  {new Date(claim.createdAt).toLocaleDateString()}
-                </div>
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "#94a3b8" }}>
-                <span>{typeIcon[claim.type] || "📋"}</span>
-                {claim.type}
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span style={{
-                  fontSize: "11px", padding: "3px 10px", borderRadius: "20px", fontWeight: 600,
-                  background: `${statusColor[claim.status] || "#64748b"}15`,
-                  color: statusColor[claim.status] || "#64748b",
-                  border: `1px solid ${statusColor[claim.status] || "#64748b"}30`,
-                }}>
-                  {claim.status}
-                </span>
-              </div>
-              <div style={{ fontSize: "13px", color: "#64748b", display: "flex", alignItems: "center" }}>
-                {claim.clientName}
-              </div>
-              <div style={{ fontSize: "13px", fontWeight: 600, color: "#00FF94", display: "flex", alignItems: "center" }}>
-                {claim.estimatedAmount ? `$${claim.estimatedAmount.toLocaleString()}` : "—"}
-              </div>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span style={{ color: "#475569", fontSize: "18px" }}>›</span>
-              </div>
+
+          {/* Rows */}
+          {isLoading ? (
+            <div style={{ padding: "48px", textAlign: "center", color: "#475569" }}>Loading...</div>
+          ) : data?.items.length === 0 ? (
+            <div style={{ padding: "64px", textAlign: "center" }}>
+              <div style={{ fontSize: "40px", marginBottom: "16px" }}>📋</div>
+              <div style={{ color: "#64748b", fontSize: "15px" }}>No claims found</div>
+              {(isAdmin || isAgent) && (
+                <button
+                  onClick={() => navigate("/claims/new")}
+                  style={{
+                    marginTop: "16px", padding: "10px 20px",
+                    background: "rgba(0,212,255,0.1)",
+                    border: "1px solid rgba(0,212,255,0.2)",
+                    borderRadius: "8px", color: "#00D4FF",
+                    cursor: "pointer", fontSize: "13px",
+                  }}
+                >
+                  Create first claim
+                </button>
+              )}
             </div>
-          ))
-        )}
-      </div>
+          ) : (
+            data?.items.map((claim: Claim) => (
+              <div
+                key={claim.id}
+                onClick={() => navigate(`/claims/${claim.id}`)}
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 80px",
+                  gap: "16px", padding: "16px 24px",
+                  borderBottom: "1px solid rgba(255,255,255,0.04)",
+                  cursor: "pointer", transition: "background 0.15s",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.02)")}
+                onMouseLeave={e => (e.currentTarget.style.background = "transparent")}
+              >
+                <div>
+                  <div style={{ fontSize: "13px", fontWeight: 600, color: "#e2e8f0" }}>
+                    #{claim.id} {claim.title}
+                  </div>
+                  <div style={{ fontSize: "11px", color: "#475569", marginTop: "3px" }}>
+                    {new Date(claim.createdAt).toLocaleDateString()}
+                  </div>
+                </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "#94a3b8" }}>
+                  <span>{typeIcon[claim.type] || "📋"}</span>
+                  {claim.type}
+                </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <span style={{
+                    fontSize: "11px", padding: "3px 10px", borderRadius: "20px", fontWeight: 600,
+                    background: `${statusColor[claim.status] || "#64748b"}15`,
+                    color: statusColor[claim.status] || "#64748b",
+                    border: `1px solid ${statusColor[claim.status] || "#64748b"}30`,
+                  }}>
+                    {claim.status}
+                  </span>
+                </div>
+                <div style={{ fontSize: "13px", color: "#64748b", display: "flex", alignItems: "center" }}>
+                  {claim.clientName}
+                </div>
+                <div style={{ fontSize: "13px", fontWeight: 600, color: "#00FF94", display: "flex", alignItems: "center" }}>
+                  {claim.estimatedAmount ? `$${claim.estimatedAmount.toLocaleString()}` : "—"}
+                </div>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <span style={{ color: "#475569", fontSize: "18px" }}>›</span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      ) : (
+        /* Mobile Cards */
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {isLoading ? (
+            <div style={{ padding: "48px", textAlign: "center", color: "#475569" }}>Loading...</div>
+          ) : data?.items.length === 0 ? (
+            <div style={{ padding: "48px", textAlign: "center" }}>
+              <div style={{ fontSize: "40px", marginBottom: "12px" }}>📋</div>
+              <div style={{ color: "#64748b", fontSize: "14px" }}>No claims found</div>
+              {(isAdmin || isAgent) && (
+                <button
+                  onClick={() => navigate("/claims/new")}
+                  style={{
+                    marginTop: "16px", padding: "10px 20px",
+                    background: "rgba(0,212,255,0.1)",
+                    border: "1px solid rgba(0,212,255,0.2)",
+                    borderRadius: "8px", color: "#00D4FF",
+                    cursor: "pointer", fontSize: "13px",
+                  }}
+                >
+                  Create first claim
+                </button>
+              )}
+            </div>
+          ) : (
+            data?.items.map((claim: Claim) => (
+              <div
+                key={claim.id}
+                onClick={() => navigate(`/claims/${claim.id}`)}
+                style={{
+                  background: "rgba(255,255,255,0.03)",
+                  border: "1px solid rgba(255,255,255,0.06)",
+                  borderRadius: "12px", padding: "16px",
+                  cursor: "pointer", transition: "all 0.2s",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(0,212,255,0.2)")}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)")}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
+                  <div style={{ flex: 1, marginRight: "12px" }}>
+                    <div style={{ fontSize: "14px", fontWeight: 600, color: "#e2e8f0" }}>#{claim.id} {claim.title}</div>
+                    <div style={{ fontSize: "11px", color: "#475569", marginTop: "2px" }}>{new Date(claim.createdAt).toLocaleDateString()}</div>
+                  </div>
+                  <span style={{
+                    fontSize: "11px", padding: "3px 10px", borderRadius: "20px", fontWeight: 600,
+                    background: `${statusColor[claim.status] || "#64748b"}15`,
+                    color: statusColor[claim.status] || "#64748b",
+                    border: `1px solid ${statusColor[claim.status] || "#64748b"}30`,
+                    whiteSpace: "nowrap",
+                  }}>
+                    {claim.status}
+                  </span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", gap: "12px" }}>
+                    <span style={{ fontSize: "12px", color: "#64748b" }}>{typeIcon[claim.type]} {claim.type}</span>
+                    <span style={{ fontSize: "12px", color: "#64748b" }}>{claim.clientName}</span>
+                  </div>
+                  <span style={{ fontSize: "14px", fontWeight: 700, color: "#00FF94" }}>
+                    {claim.estimatedAmount ? `$${claim.estimatedAmount.toLocaleString()}` : "—"}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
 
       {/* Pagination */}
       {data && data.totalPages > 1 && (
