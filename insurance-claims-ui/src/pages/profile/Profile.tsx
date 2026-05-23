@@ -4,6 +4,8 @@ import { useAuth } from "../../context/AuthContext";
 import { authService } from "../../services/authService";
 import type { ProfileStats } from "../../services/authService";
 import { useWindowSize } from "../../hooks/useWindowSize";
+import { useToast } from "../../components/ui/Toast";
+import { ProfileSkeleton } from "../../components/ui/Skeleton";
 
 const roleColors: Record<string, string> = {
   Admin: "#FF6B6B",
@@ -28,7 +30,7 @@ export default function Profile() {
   const queryClient = useQueryClient();
   const roleColor = roleColors[user?.role || ""] || "#00D4FF";
   const { isMobile } = useWindowSize();
-
+  const toast = useToast();
   const [editing, setEditing] = useState(false);
   const [firstName, setFirstName] = useState(user?.firstName || "");
   const [lastName, setLastName] = useState(user?.lastName || "");
@@ -58,6 +60,8 @@ export default function Profile() {
     }
   }, [stats]);
 
+  if (isLoading) return <ProfileSkeleton />;
+
   const handleSaveProfile = async () => {
     setSaveLoading(true);
     setSaveError("");
@@ -66,11 +70,13 @@ export default function Profile() {
       await authService.updateProfile({ firstName, lastName, phoneNumber });
       queryClient.invalidateQueries({ queryKey: ["profile-stats"] });
       if (user) login({ ...user, firstName, lastName });
+      toast.success("Profile updated", "Your changes have been saved.");
       setSaveSuccess(true);
       setEditing(false);
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch {
       setSaveError("Failed to update profile.");
+      toast.error("Update failed");
     } finally {
       setSaveLoading(false);
     }
@@ -84,12 +90,14 @@ export default function Profile() {
     setPwdSuccess(false);
     try {
       await authService.changePassword({ currentPassword, newPassword });
+      toast.success("Password changed", "Your new password is now active.");
       setPwdSuccess(true);
       setChangingPwd(false);
       setCurrentPassword(""); setNewPassword(""); setConfirmPassword("");
       setTimeout(() => setPwdSuccess(false), 3000);
     } catch {
       setPwdError("Current password is incorrect.");
+      toast.error("Password change failed", "The current password you entered is incorrect.");
     } finally {
       setPwdLoading(false);
     }
@@ -187,7 +195,7 @@ export default function Profile() {
           </button>
         </div>
 
-        {!isLoading && stats && (
+        {stats && (
           <div style={{
             display: "grid",
             gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)",

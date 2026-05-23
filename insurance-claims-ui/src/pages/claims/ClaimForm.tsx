@@ -4,12 +4,17 @@ import { useAuth } from "../../context/AuthContext";
 import { claimsService } from "../../services/claimsService";
 import { useQuery } from "@tanstack/react-query";
 import { policyService } from "../../services/policyService";
+import { useToast } from "../../components/ui/Toast";
+
 
 export default function ClaimForm() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+
+  const toast = useToast();
 
   const [form, setForm] = useState({
     title: "",
@@ -43,6 +48,7 @@ export default function ClaimForm() {
       });
       navigate(`/claims/${claim.id}`);
     } catch {
+      toast.error("Failed to create claim", "Please check all fields and try again.");
       setError("Failed to create claim. Please check all fields.");
     } finally {
       setLoading(false);

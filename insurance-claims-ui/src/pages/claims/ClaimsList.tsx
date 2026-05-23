@@ -6,6 +6,7 @@ import { claimsService } from "../../services/claimsService";
 import type { Claim } from "../../types";
 import ExportButton from "../../components/ui/ExportButton";
 import { useWindowSize } from "../../hooks/useWindowSize";
+import { ClaimsListSkeleton } from "../../components/ui/Skeleton";
 
 const statusColor: Record<string, string> = {
   Pending: "#FFB800",
@@ -155,7 +156,7 @@ export default function ClaimsList() {
 
           {/* Rows */}
           {isLoading ? (
-            <div style={{ padding: "48px", textAlign: "center", color: "#475569" }}>Loading...</div>
+            <ClaimsListSkeleton />
           ) : data?.items.length === 0 ? (
             <div style={{ padding: "64px", textAlign: "center" }}>
               <div style={{ fontSize: "40px", marginBottom: "16px" }}>📋</div>
@@ -229,7 +230,7 @@ export default function ClaimsList() {
         /* Mobile Cards */
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
           {isLoading ? (
-            <div style={{ padding: "48px", textAlign: "center", color: "#475569" }}>Loading...</div>
+            <ClaimsListSkeleton />
           ) : data?.items.length === 0 ? (
             <div style={{ padding: "48px", textAlign: "center" }}>
               <div style={{ fontSize: "40px", marginBottom: "12px" }}>📋</div>

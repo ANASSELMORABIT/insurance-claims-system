@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { userService } from "../../services/userService";
 import type { UserResponse } from "../../services/userService";
+import { useToast } from "../../components/ui/Toast";
+import { useConfirm } from "../../components/ui/ConfirmModal";
+
 
 const roleColors: Record<string, string> = {
   Admin: "#FF6B6B", Agent: "#00FF94", Client: "#FFB800",
@@ -15,32 +18,50 @@ export default function UsersList() {
   const [form, setForm] = useState({ firstName: "", lastName: "", email: "", password: "", role: "Client" });
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState("");
+  const toast = useToast();
+  const confirm = useConfirm();
 
   const { data, isLoading } = useQuery({
     queryKey: ["users", page, roleFilter],
     queryFn: () => userService.getAll({ page, pageSize: 10, role: roleFilter || undefined }),
   });
 
-  const handleToggle = async (id: string) => {
+  const handleToggle = async (id: string, isActive: boolean) => {
+  const ok = await confirm({
+    title: isActive ? "Disable User" : "Enable User",
+    message: isActive
+      ? "This user will no longer be able to access the system."
+      : "This user will regain access to the system.",
+    confirmLabel: isActive ? "Disable" : "Enable",
+    danger: isActive,
+  });
+  if (!ok) return;
+  try {
     await userService.toggleActive(id);
     queryClient.invalidateQueries({ queryKey: ["users"] });
-  };
+    toast.success(isActive ? "User disabled" : "User enabled");
+  } catch {
+    toast.error("Action failed");
+  }
+};
 
   const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormLoading(true);
-    setFormError("");
-    try {
-      await userService.create(form);
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-      setShowForm(false);
-      setForm({ firstName: "", lastName: "", email: "", password: "", role: "Client" });
-    } catch {
-      setFormError("Failed to create user. Email may already exist.");
-    } finally {
-      setFormLoading(false);
-    }
-  };
+  e.preventDefault();
+  setFormLoading(true);
+  setFormError("");
+  try {
+    await userService.create(form);
+    queryClient.invalidateQueries({ queryKey: ["users"] });
+    setShowForm(false);
+    setForm({ firstName: "", lastName: "", email: "", password: "", role: "Client" });
+    toast.success("User created", `${form.firstName} ${form.lastName} has been added successfully.`);
+  } catch {
+    setFormError("Failed to create user. Email may already exist.");
+    toast.error("Failed to create user");
+  } finally {
+    setFormLoading(false);
+  }
+};
 
   const inputStyle = {
     width: "100%", padding: "10px 14px",
@@ -175,7 +196,7 @@ export default function UsersList() {
               </div>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <button
-                  onClick={() => handleToggle(user.id)}
+                  onClick={() => handleToggle(user.id, user.isActive)}
                   style={{
                     padding: "6px 12px", fontSize: "11px", fontWeight: 600,
                     background: user.isActive ? "rgba(255,107,107,0.1)" : "rgba(0,255,148,0.1)",

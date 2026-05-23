@@ -4,6 +4,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "../../context/AuthContext";
 import { claimsService } from "../../services/claimsService";
 import { documentService } from "../../services/documentService";
+import { useToast } from "../../components/ui/Toast";
+import { useConfirm } from "../../components/ui/ConfirmModal";
 
 const statusColor: Record<string, string> = {
   Pending: "#FFB800", UnderReview: "#00D4FF",
@@ -24,6 +26,8 @@ export default function ClaimDetail() {
   const [comment, setComment] = useState("");
   const [statusLoading, setStatusLoading] = useState(false);
   const [uploadLoading, setUploadLoading] = useState(false);
+  const toast = useToast();
+  const confirm = useConfirm();
 
   const { data: claim, isLoading } = useQuery({
     queryKey: ["claim", id],
@@ -46,23 +50,29 @@ export default function ClaimDetail() {
       queryClient.invalidateQueries({ queryKey: ["claim", id] });
       setNewStatus("");
       setComment("");
+      toast.success("Status updated", "The claim status has been changed successfully.");
+    } catch {
+      toast.error("Failed to update", "Could not update the claim status. Please try again.");
     } finally {
       setStatusLoading(false);
     }
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadLoading(true);
-    try {
-      await documentService.upload(Number(id), file);
-      refetchDocs();
-    } finally {
-      setUploadLoading(false);
-      e.target.value = "";
-    }
-  };
+  const file = e.target.files?.[0];
+  if (!file) return;
+  setUploadLoading(true);
+  try {
+    await documentService.upload(Number(id), file);
+    refetchDocs();
+    toast.success("Document uploaded", `${file.name} has been uploaded successfully.`);
+  } catch {
+    toast.error("Upload failed", "Could not upload the document. Check the file type and size.");
+  } finally {
+    setUploadLoading(false);
+    e.target.value = "";
+  }
+};
 
   const handleDownload = async (docId: number, fileName: string) => {
     const blob = await documentService.download(docId);
@@ -73,8 +83,20 @@ export default function ClaimDetail() {
   };
 
   const handleDelete = async (docId: number) => {
-    await documentService.delete(docId);
-    refetchDocs();
+    const ok = await confirm({
+      title: "Delete Document",
+      message: "Are you sure you want to delete this document? This action cannot be undone.",
+      confirmLabel: "Delete",
+      danger: true,
+    });
+    if (!ok) return;
+    try {
+      await documentService.delete(docId);
+      refetchDocs();
+      toast.success("Document deleted");
+    } catch {
+      toast.error("Failed to delete document");
+    }
   };
 
   if (isLoading) return (

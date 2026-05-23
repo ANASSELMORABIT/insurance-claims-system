@@ -66,3 +66,8 @@ select option { background: #0d0d1a; }
     padding-bottom: 80px;
   }
 }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}

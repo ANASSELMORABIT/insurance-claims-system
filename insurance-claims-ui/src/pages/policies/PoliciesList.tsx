@@ -3,6 +3,9 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { policyService } from "../../services/policyService";
 import type { PolicyResponse } from "../../services/policyService";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../components/ui/Toast";
+import { useConfirm } from "../../components/ui/ConfirmModal";
+
 
 export default function PoliciesList() {
   const { isAdmin } = useAuth();
@@ -12,6 +15,8 @@ export default function PoliciesList() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState("");
+  const toast = useToast();
+  const confirm = useConfirm();
   const [form, setForm] = useState({
     policyNumber: "", holderName: "", holderEmail: "",
     startDate: "", endDate: "", coverageAmount: "",
@@ -43,24 +48,27 @@ export default function PoliciesList() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormLoading(true);
-    setFormError("");
-    try {
-      const payload = { ...form, coverageAmount: Number(form.coverageAmount) };
-      if (editingId) {
-        await policyService.update(editingId, payload);
-      } else {
-        await policyService.create(payload);
-      }
-      queryClient.invalidateQueries({ queryKey: ["policies"] });
-      resetForm();
-    } catch {
-      setFormError("Failed to save policy.");
-    } finally {
-      setFormLoading(false);
+  e.preventDefault();
+  setFormLoading(true);
+  setFormError("");
+  try {
+    const payload = { ...form, coverageAmount: Number(form.coverageAmount) };
+    if (editingId) {
+      await policyService.update(editingId, payload);
+      toast.success("Policy updated");
+    } else {
+      await policyService.create(payload);
+      toast.success("Policy created", `Policy ${form.policyNumber} has been created.`);
     }
-  };
+    queryClient.invalidateQueries({ queryKey: ["policies"] });
+    resetForm();
+  } catch {
+    setFormError("Failed to save policy.");
+    toast.error("Failed to save policy");
+  } finally {
+    setFormLoading(false);
+  }
+};
 
   const handleToggle = async (id: number) => {
     await policyService.toggle(id);
@@ -68,11 +76,21 @@ export default function PoliciesList() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Delete this policy?")) return;
+  const ok = await confirm({
+    title: "Delete Policy",
+    message: "This will permanently delete the policy. Claims linked to it may be affected.",
+    confirmLabel: "Delete Policy",
+    danger: true,
+  });
+  if (!ok) return;
+  try {
     await policyService.delete(id);
     queryClient.invalidateQueries({ queryKey: ["policies"] });
-  };
-
+    toast.success("Policy deleted");
+  } catch {
+    toast.error("Failed to delete policy");
+  }
+};
   const inputStyle = {
     width: "100%", padding: "10px 14px",
     background: "rgba(255,255,255,0.04)",

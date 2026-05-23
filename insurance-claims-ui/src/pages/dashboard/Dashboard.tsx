@@ -8,6 +8,9 @@ import {
 } from "recharts";
 import { useWindowSize } from "../../hooks/useWindowSize";
 
+import { DashboardSkeleton } from "../../components/ui/Skeleton";
+
+
 const C = {
   bg: "#1e1e1e", card: "#171717", cardAlt: "#1a1a1a",
   border: "#2e2e2e", text: "#676767", textMid: "#a0a0a0", textHi: "#f0f0f0",
@@ -104,11 +107,7 @@ export default function Dashboard() {
     load();
   }, [isAdmin, isAgent, isClient]);
 
-  if (loading) return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "60vh" }}>
-      <div style={{ color: C.cyan, fontFamily: "'Nunito', sans-serif", fontSize: 18, fontWeight: 700 }}>Loading...</div>
-    </div>
-  );
+  if (loading) return <DashboardSkeleton />;
 
   if (!stats) return null;
 

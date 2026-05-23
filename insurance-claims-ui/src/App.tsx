@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import { ToastProvider } from "./components/ui/Toast";
+import { ConfirmProvider } from "./components/ui/ConfirmModal";
 import type { ReactNode } from "react";
 import Login from "./pages/auth/Login";
 import Layout from "./components/layout/Layout";
@@ -35,37 +37,20 @@ function AppRoutes() {
       <Route path="/" element={<ProtectedRoute><Layout /></ProtectedRoute>}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
-
-        {/* Claims — todos los roles */}
         <Route path="claims" element={<ClaimsList />} />
         <Route path="claims/:id" element={<ClaimDetail />} />
-
-        {/* New Claim — solo Admin y Agent */}
         <Route path="claims/new" element={
-          <RoleRoute roles={["Admin", "Agent"]}>
-            <ClaimForm />
-          </RoleRoute>
+          <RoleRoute roles={["Admin", "Agent"]}><ClaimForm /></RoleRoute>
         } />
-
-        {/* Profile — todos los roles */}
         <Route path="profile" element={<Profile />} />
-
-        {/* Placeholders para fases siguientes */}
+        <Route path="reports" element={
+          <RoleRoute roles={["Admin"]}><Reports /></RoleRoute>
+        } />
         <Route path="users" element={
-          <RoleRoute roles={["Admin"]}>
-            <UsersList />
-          </RoleRoute>
+          <RoleRoute roles={["Admin"]}><UsersList /></RoleRoute>
         } />
         <Route path="policies" element={
-          <RoleRoute roles={["Admin", "Agent"]}>
-            <PoliciesList />
-          </RoleRoute>
-        } />
-
-        <Route path="reports" element={
-          <RoleRoute roles={["Admin"]}>
-            <Reports />
-          </RoleRoute>
+          <RoleRoute roles={["Admin", "Agent"]}><PoliciesList /></RoleRoute>
         } />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
@@ -76,11 +61,15 @@ function AppRoutes() {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BrowserRouter>
-          <AppRoutes />
-        </BrowserRouter>
-      </AuthProvider>
+      <ToastProvider>
+        <ConfirmProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </AuthProvider>
+        </ConfirmProvider>
+      </ToastProvider>
     </QueryClientProvider>
   );
 }
