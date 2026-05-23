@@ -11,7 +11,7 @@ import ClaimForm from "./pages/claims/ClaimForm";
 import Profile from "./pages/profile/Profile";
 import UsersList from "./pages/users/UsersList";
 import PoliciesList from "./pages/policies/PoliciesList";
-
+import Reports from "./pages/reports/Reports";
 
 const queryClient = new QueryClient();
 
@@ -59,6 +59,12 @@ function AppRoutes() {
         <Route path="policies" element={
           <RoleRoute roles={["Admin", "Agent"]}>
             <PoliciesList />
+          </RoleRoute>
+        } />
+
+        <Route path="reports" element={
+          <RoleRoute roles={["Admin"]}>
+            <Reports />
           </RoleRoute>
         } />
       </Route>
