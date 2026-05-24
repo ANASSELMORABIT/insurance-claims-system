@@ -2,13 +2,32 @@
 **/bin/
 **/obj/
 *.user
+*.suo
+.vs/
 appsettings.Development.json
+
+# Secrets — NUNCA subir
+**/appsettings.Production.json
+**/appsettings.Staging.json
 
 # Node
 node_modules/
 dist/
 .env
 .env.local
+.env.production
 
-# VSC
+# VSCode
 .vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Test results
+TestResults/
+coverage/
