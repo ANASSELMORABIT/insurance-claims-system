@@ -1,256 +1,285 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { authService } from "../../services/authService";
 
 // Add these Google Fonts to your index.html or global CSS:
-// <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+// <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+
+const keyframes = `
+@keyframes drift {
+  0%   { transform: translateX(0) translateY(0) rotate(0deg); }
+  25%  { transform: translateX(60px) translateY(-40px) rotate(15deg); }
+  50%  { transform: translateX(30px) translateY(50px) rotate(-10deg); }
+  75%  { transform: translateX(-40px) translateY(20px) rotate(20deg); }
+  100% { transform: translateX(0) translateY(0) rotate(0deg); }
+}
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(32px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+@keyframes btnSheen {
+  from { left: -100%; }
+  to   { left: 160%; }
+}
+`;
 
 const styles: Record<string, React.CSSProperties> = {
   root: {
     minHeight: "100vh",
-    background: "#060612",
+    background: "#06060f",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Figtree', sans-serif",
     position: "relative",
     overflow: "hidden",
   },
-  orb1: {
+
+  // Aurora bands
+  aurora1: {
     position: "absolute",
-    width: "420px",
-    height: "420px",
+    width: "600px",
+    height: "300px",
     borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(0,212,255,0.18) 0%, transparent 70%)",
-    filter: "blur(80px)",
-    top: "-120px",
-    left: "-120px",
-    animation: "orbFloat1 9s ease-in-out infinite",
+    background: "radial-gradient(ellipse, rgba(60,80,220,0.22) 0%, transparent 70%)",
+    filter: "blur(90px)",
+    top: "-80px",
+    left: "-100px",
+    animation: "drift 18s linear infinite",
     pointerEvents: "none",
   },
-  orb2: {
+  aurora2: {
+    position: "absolute",
+    width: "500px",
+    height: "250px",
+    borderRadius: "50%",
+    background: "radial-gradient(ellipse, rgba(80,60,200,0.18) 0%, transparent 70%)",
+    filter: "blur(90px)",
+    top: "30%",
+    left: "40%",
+    animation: "drift 24s linear -8s infinite",
+    pointerEvents: "none",
+  },
+  aurora3: {
+    position: "absolute",
+    width: "400px",
+    height: "200px",
+    borderRadius: "50%",
+    background: "radial-gradient(ellipse, rgba(100,140,255,0.14) 0%, transparent 70%)",
+    filter: "blur(90px)",
+    bottom: "-60px",
+    right: "-80px",
+    animation: "drift 20s linear -14s infinite",
+    pointerEvents: "none",
+  },
+  aurora4: {
     position: "absolute",
     width: "350px",
-    height: "350px",
+    height: "180px",
     borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(0,255,148,0.12) 0%, transparent 70%)",
-    filter: "blur(80px)",
-    bottom: "-80px",
-    right: "-80px",
-    animation: "orbFloat2 11s ease-in-out infinite",
+    background: "radial-gradient(ellipse, rgba(40,20,120,0.25) 0%, transparent 70%)",
+    filter: "blur(90px)",
+    top: "50%",
+    left: "-80px",
+    animation: "drift 16s linear -5s infinite",
     pointerEvents: "none",
   },
-  orb3: {
-    position: "absolute",
-    width: "260px",
-    height: "260px",
-    borderRadius: "50%",
-    background: "radial-gradient(circle, rgba(120,80,255,0.14) 0%, transparent 70%)",
-    filter: "blur(60px)",
-    top: "40%",
-    left: "55%",
-    animation: "orbFloat3 13s ease-in-out infinite",
-    pointerEvents: "none",
-  },
-  grid: {
+
+  noiseOverlay: {
     position: "absolute",
     inset: 0,
+    opacity: 0.035,
     backgroundImage:
-      "linear-gradient(rgba(0,212,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(0,212,255,0.035) 1px, transparent 1px)",
-    backgroundSize: "48px 48px",
-    animation: "gridDrift 20s linear infinite",
+      "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
     pointerEvents: "none",
   },
+
+  scanLines: {
+    position: "absolute",
+    inset: 0,
+    background:
+      "repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px)",
+    pointerEvents: "none",
+  },
+
   card: {
     position: "relative",
     width: "100%",
     maxWidth: "420px",
     margin: "0 24px",
-    background: "rgba(255,255,255,0.035)",
-    border: "1px solid rgba(255,255,255,0.09)",
-    borderRadius: "24px",
-    padding: "44px 40px",
-    backdropFilter: "blur(24px)",
-    WebkitBackdropFilter: "blur(24px)",
+    background: "rgba(255,255,255,0.028)",
+    border: "1px solid rgba(80,120,255,0.15)",
+    borderRadius: "20px",
+    padding: "44px 40px 40px",
+    backdropFilter: "blur(32px)",
+    WebkitBackdropFilter: "blur(32px)",
     boxShadow:
-      "0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,212,255,0.06), inset 0 1px 0 rgba(255,255,255,0.07)",
-    animation: "cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both",
+      "0 60px 120px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(0,0,0,0.3)",
+    animation: "cardIn 0.8s cubic-bezier(0.16,1,0.3,1) both",
   },
-  topShine: {
+
+  topLine: {
     position: "absolute",
     top: 0,
     left: "50%",
     transform: "translateX(-50%)",
-    width: "60%",
+    width: "55%",
     height: "1px",
-    background: "linear-gradient(90deg, transparent, rgba(0,212,255,0.4), transparent)",
+    background:
+      "linear-gradient(90deg, transparent, rgba(100,140,255,0.55), transparent)",
   },
-  logoBadge: {
-    display: "inline-flex",
+
+  cornerTL: {
+    position: "absolute",
+    top: "16px",
+    left: "16px",
+    borderTop: "1px solid rgba(80,120,255,0.3)",
+    borderLeft: "1px solid rgba(80,120,255,0.3)",
+    width: "20px",
+    height: "20px",
+    pointerEvents: "none",
+  },
+
+  cornerBR: {
+    position: "absolute",
+    bottom: "16px",
+    right: "16px",
+    borderBottom: "1px solid rgba(80,120,255,0.3)",
+    borderRight: "1px solid rgba(80,120,255,0.3)",
+    width: "20px",
+    height: "20px",
+    pointerEvents: "none",
+  },
+
+  brandWrapper: {
+    display: "flex",
     alignItems: "center",
-    gap: "10px",
-    marginBottom: "22px",
+    gap: "11px",
+    marginBottom: "32px",
   },
-  logoIcon: {
-    width: "38px",
-    height: "38px",
-    background: "linear-gradient(135deg, #00D4FF 0%, #00FF94 100%)",
-    borderRadius: "11px",
+
+  brandIcon: {
+    width: "40px",
+    height: "40px",
+    background: "linear-gradient(135deg, #3a5cec 0%, #6080ff 50%, #2540c8 100%)",
+    borderRadius: "10px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     fontSize: "18px",
-    boxShadow: "0 0 20px rgba(0,212,255,0.3)",
+    boxShadow:
+      "0 0 28px rgba(80,120,255,0.4), inset 0 1px 0 rgba(255,255,255,0.2)",
   },
-  logoText: {
-    fontFamily: "'Syne', sans-serif",
-    fontWeight: 800,
-    fontSize: "15px",
-    background: "linear-gradient(90deg, #00D4FF, #00FF94)",
-    WebkitBackgroundClip: "text",
-    WebkitTextFillColor: "transparent",
+
+  brandName: {
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "20px",
+    fontWeight: 600,
+    color: "#7090ff",
     letterSpacing: "0.5px",
+  } as React.CSSProperties,
+
+  brandTag: {
+    fontSize: "10px",
+    fontWeight: 500,
+    letterSpacing: "2px",
+    color: "rgba(100,130,255,0.45)",
+    textTransform: "uppercase" as const,
+    lineHeight: 1,
   },
-  h1: {
-    fontFamily: "'Syne', sans-serif",
-    fontSize: "26px",
-    fontWeight: 800,
-    color: "#f0f6ff",
-    margin: "0 0 6px",
+
+  heading: {
+    fontFamily: "'Cormorant Garamond', serif",
+    fontSize: "32px",
+    fontWeight: 700,
+    color: "#e8eeff",
+    margin: "0 0 5px",
     letterSpacing: "-0.5px",
+    lineHeight: 1.1,
   },
-  subtitle: {
-    fontSize: "14px",
-    color: "#4a5568",
-    lineHeight: 1.4,
-    margin: 0,
+
+  subheading: {
+    fontSize: "13px",
+    color: "rgba(160,180,255,0.4)",
+    margin: "0 0 34px",
   },
+
   label: {
     display: "block",
-    fontSize: "11px",
+    fontSize: "10px",
     fontWeight: 600,
-    letterSpacing: "1.2px",
-    color: "#718096",
+    letterSpacing: "1.8px",
+    color: "rgba(120,150,255,0.55)",
     textTransform: "uppercase" as const,
     marginBottom: "8px",
   },
+
   input: {
     width: "100%",
+    boxSizing: "border-box" as const,
     padding: "12px 16px",
     background: "rgba(255,255,255,0.04)",
-    border: "1px solid rgba(255,255,255,0.08)",
-    borderRadius: "12px",
-    color: "#e8f0fe",
+    border: "1px solid rgba(80,120,255,0.12)",
+    borderRadius: "10px",
+    color: "#d0d8ff",
     fontSize: "14px",
-    fontFamily: "'DM Sans', sans-serif",
+    fontFamily: "'Figtree', sans-serif",
     outline: "none",
     transition: "border-color 0.25s, background 0.25s, box-shadow 0.25s",
-    boxSizing: "border-box" as const,
   },
+
   errorBox: {
+    display: "flex",
+    alignItems: "center",
+    gap: "9px",
     padding: "11px 14px",
-    marginBottom: "18px",
-    background: "rgba(255,80,80,0.08)",
-    border: "1px solid rgba(255,80,80,0.2)",
-    borderRadius: "10px",
+    background: "rgba(200,60,60,0.08)",
+    border: "1px solid rgba(200,60,60,0.2)",
+    borderRadius: "9px",
     color: "#fc8181",
     fontSize: "13px",
-    display: "flex",
-    alignItems: "center",
-    gap: "8px",
+    marginBottom: "18px",
   },
+
   divider: {
-    width: "100%",
     height: "1px",
-    background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent)",
-    margin: "24px 0",
+    background:
+      "linear-gradient(90deg, transparent, rgba(80,120,255,0.1), transparent)",
+    margin: "22px 0",
   },
-  demoHint: {
-    padding: "13px 16px",
-    background: "rgba(0,212,255,0.04)",
-    border: "1px solid rgba(0,212,255,0.1)",
-    borderRadius: "10px",
+
+  demoBadge: {
     display: "flex",
-    alignItems: "center",
-    gap: "10px",
+    alignItems: "flex-start",
+    gap: "11px",
+    padding: "12px 14px",
+    background: "rgba(80,120,255,0.05)",
+    border: "1px solid rgba(80,120,255,0.1)",
+    borderRadius: "10px",
   },
+
   demoDot: {
     width: "6px",
     height: "6px",
     borderRadius: "50%",
-    background: "#00D4FF",
+    background: "#5070ee",
     flexShrink: 0,
-    boxShadow: "0 0 6px rgba(0,212,255,0.6)",
+    marginTop: "4px",
+    boxShadow: "0 0 8px rgba(80,120,255,0.7)",
+    animation: "pulse 2.5s ease-in-out infinite",
   },
+
   demoText: {
     fontSize: "12px",
-    color: "#4a5568",
-    lineHeight: 1.4,
+    color: "rgba(160,180,255,0.5)",
+    lineHeight: 1.5,
     margin: 0,
   },
 };
-
-const keyframes = `
-@keyframes orbFloat1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(40px, -30px) scale(1.05); }
-  66% { transform: translate(-25px, 20px) scale(0.96); }
-}
-@keyframes orbFloat2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-30px, 25px) scale(1.04); }
-  66% { transform: translate(20px, -15px) scale(0.97); }
-}
-@keyframes orbFloat3 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-40px, -25px) scale(1.08); }
-}
-@keyframes gridDrift {
-  0% { background-position: 0 0; }
-  100% { background-position: 48px 48px; }
-}
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(28px) scale(0.97); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-@keyframes particleDrift {
-  0%   { transform: translateY(0) translateX(0); opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: translateY(-600px) translateX(40px); opacity: 0; }
-}
-`;
-
-function Particles() {
-  const particles = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 3 + 1,
-    left: Math.random() * 100,
-    duration: Math.random() * 12 + 8,
-    delay: Math.random() * -18,
-    color: Math.random() > 0.5 ? "rgba(0,212,255,0.7)" : "rgba(0,255,148,0.5)",
-  }));
-
-  return (
-    <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-      {particles.map(p => (
-        <div
-          key={p.id}
-          style={{
-            position: "absolute",
-            width: `${p.size}px`,
-            height: `${p.size}px`,
-            borderRadius: "50%",
-            background: p.color,
-            left: `${p.left}%`,
-            bottom: "-10px",
-            animation: `particleDrift ${p.duration}s linear ${p.delay}s infinite`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
 
 export default function Login() {
   const { login } = useAuth();
@@ -277,18 +306,22 @@ export default function Login() {
     width: "100%",
     padding: "13px",
     background: loading
-      ? "rgba(0,212,255,0.25)"
-      : "linear-gradient(135deg, #00D4FF 0%, #00c875 100%)",
+      ? "rgba(80,120,255,0.25)"
+      : "linear-gradient(135deg, #3a5cec 0%, #5a7aff 50%, #2a42cc 100%)",
     border: "none",
-    borderRadius: "12px",
-    color: "#050c14",
-    fontWeight: 700,
+    borderRadius: "10px",
+    color: loading ? "rgba(200,210,255,0.5)" : "#e8eeff",
+    fontWeight: 600,
     fontSize: "14px",
-    fontFamily: "'Syne', sans-serif",
+    fontFamily: "'Figtree', sans-serif",
     letterSpacing: "0.5px",
     cursor: loading ? "not-allowed" : "pointer",
+    position: "relative",
+    overflow: "hidden",
     transition: "opacity 0.2s, transform 0.15s, box-shadow 0.2s",
-    boxShadow: loading ? "none" : "0 4px 20px rgba(0,212,255,0.2)",
+    boxShadow: loading
+      ? "none"
+      : "0 4px 24px rgba(80,120,255,0.35), inset 0 1px 0 rgba(255,255,255,0.15)",
     marginBottom: "20px",
   };
 
@@ -296,36 +329,38 @@ export default function Login() {
     <>
       <style>{keyframes}</style>
       <div style={styles.root}>
-        {/* Orbs */}
-        <div style={styles.orb1} />
-        <div style={styles.orb2} />
-        <div style={styles.orb3} />
+        {/* Aurora bands */}
+        <div style={styles.aurora1} />
+        <div style={styles.aurora2} />
+        <div style={styles.aurora3} />
+        <div style={styles.aurora4} />
 
-        {/* Grid */}
-        <div style={styles.grid} />
-
-        {/* Floating particles */}
-        <Particles />
+        {/* Texture overlays */}
+        <div style={styles.noiseOverlay} />
+        <div style={styles.scanLines} />
 
         {/* Card */}
         <div style={styles.card}>
-          {/* Top shine line */}
-          <div style={styles.topShine} />
+          <div style={styles.topLine} />
+          <div style={styles.cornerTL} />
+          <div style={styles.cornerBR} />
 
-          {/* Logo */}
-          <div style={{ marginBottom: "36px" }}>
-            <div style={styles.logoBadge}>
-              <div style={styles.logoIcon}>🛡️</div>
-              <span style={styles.logoText}>InsureClaims</span>
+          {/* Brand */}
+          <div style={styles.brandWrapper}>
+            <div style={styles.brandIcon}>🛡️</div>
+            <div>
+              <div style={styles.brandName}>InsureClaims</div>
+              <div style={styles.brandTag}>Enterprise Platform</div>
             </div>
-            <h1 style={styles.h1}>Welcome back</h1>
-            <p style={styles.subtitle}>Sign in to your account to continue</p>
           </div>
+
+          <h1 style={styles.heading}>Welcome back.</h1>
+          <p style={styles.subheading}>Sign in to your account to continue</p>
 
           {/* Form */}
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: "18px" }}>
-              <label style={styles.label}>Email</label>
+              <label style={styles.label}>Email address</label>
               <input
                 type="email"
                 value={email}
@@ -334,19 +369,19 @@ export default function Login() {
                 required
                 style={styles.input}
                 onFocus={e => {
-                  e.target.style.borderColor = "rgba(0,212,255,0.45)";
-                  e.target.style.background = "rgba(0,212,255,0.04)";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(0,212,255,0.08)";
+                  e.target.style.borderColor = "rgba(80,120,255,0.5)";
+                  e.target.style.background = "rgba(80,120,255,0.06)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(80,120,255,0.1)";
                 }}
                 onBlur={e => {
-                  e.target.style.borderColor = "rgba(255,255,255,0.08)";
+                  e.target.style.borderColor = "rgba(80,120,255,0.12)";
                   e.target.style.background = "rgba(255,255,255,0.04)";
                   e.target.style.boxShadow = "none";
                 }}
               />
             </div>
 
-            <div style={{ marginBottom: "24px" }}>
+            <div style={{ marginBottom: "26px" }}>
               <label style={styles.label}>Password</label>
               <input
                 type="password"
@@ -356,12 +391,12 @@ export default function Login() {
                 required
                 style={styles.input}
                 onFocus={e => {
-                  e.target.style.borderColor = "rgba(0,212,255,0.45)";
-                  e.target.style.background = "rgba(0,212,255,0.04)";
-                  e.target.style.boxShadow = "0 0 0 3px rgba(0,212,255,0.08)";
+                  e.target.style.borderColor = "rgba(80,120,255,0.5)";
+                  e.target.style.background = "rgba(80,120,255,0.06)";
+                  e.target.style.boxShadow = "0 0 0 3px rgba(80,120,255,0.1)";
                 }}
                 onBlur={e => {
-                  e.target.style.borderColor = "rgba(255,255,255,0.08)";
+                  e.target.style.borderColor = "rgba(80,120,255,0.12)";
                   e.target.style.background = "rgba(255,255,255,0.04)";
                   e.target.style.boxShadow = "none";
                 }}
@@ -383,14 +418,16 @@ export default function Login() {
                 if (!loading) {
                   (e.currentTarget as HTMLElement).style.opacity = "0.9";
                   (e.currentTarget as HTMLElement).style.transform = "translateY(-1px)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 8px 28px rgba(0,212,255,0.35)";
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    "0 8px 32px rgba(80,120,255,0.5), inset 0 1px 0 rgba(255,255,255,0.15)";
                 }
               }}
               onMouseLeave={e => {
                 if (!loading) {
                   (e.currentTarget as HTMLElement).style.opacity = "1";
                   (e.currentTarget as HTMLElement).style.transform = "translateY(0)";
-                  (e.currentTarget as HTMLElement).style.boxShadow = "0 4px 20px rgba(0,212,255,0.2)";
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    "0 4px 24px rgba(80,120,255,0.35), inset 0 1px 0 rgba(255,255,255,0.15)";
                 }
               }}
             >
@@ -400,11 +437,14 @@ export default function Login() {
 
           <div style={styles.divider} />
 
-          <div style={styles.demoHint}>
+          <div style={styles.demoBadge}>
             <div style={styles.demoDot} />
             <p style={styles.demoText}>
-              <span style={{ color: "#00D4FF", fontWeight: 600 }}>Demo:</span>{" "}
-              admin@insurance.com / Admin@1234!
+              <span style={{ color: "rgba(120,150,255,0.85)", fontWeight: 600 }}>
+                Demo credentials:
+              </span>
+              <br />
+              admin@insurance.com &nbsp;/&nbsp; Admin@1234!
             </p>
           </div>
         </div>
