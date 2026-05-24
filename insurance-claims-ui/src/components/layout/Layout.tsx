@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import NotificationBell from "../notifications/NotificationBell";
 import GlobalSearch from "../search/GlobalSearch";
 import { useWindowSize } from "../../hooks/useWindowSize";
+import ThemeToggle from "../ui/ThemeToggle";
 
 interface NavItem {
   to: string;
@@ -13,12 +14,12 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { to: "/dashboard", icon: "📊", label: "Dashboard", roles: ["Admin", "Agent", "Client"] },
-  { to: "/claims",    icon: "📋", label: "Claims",    roles: ["Admin", "Agent", "Client"] },
-  { to: "/users",     icon: "👥", label: "Users",     roles: ["Admin"] },
-  { to: "/policies",  icon: "📜", label: "Policies",  roles: ["Admin", "Agent"] },
-  { to: "/reports",   icon: "📈", label: "Reports",   roles: ["Admin", "Agent"] },
-  { to: "/profile",   icon: "👤", label: "Profile",   roles: ["Admin", "Agent", "Client"] },
+  { to: "/dashboard", icon: "bi bi-grid-1x2",         label: "Dashboard", roles: ["Admin", "Agent", "Client"] },
+  { to: "/claims",    icon: "bi bi-shield-check",      label: "Claims",    roles: ["Admin", "Agent", "Client"] },
+  { to: "/users",     icon: "bi bi-people",            label: "Users",     roles: ["Admin"] },
+  { to: "/policies",  icon: "bi bi-file-earmark-text", label: "Policies",  roles: ["Admin", "Agent"] },
+  { to: "/reports",   icon: "bi bi-bar-chart-line",    label: "Reports",   roles: ["Admin", "Agent"] },
+  { to: "/profile",   icon: "bi bi-person-circle",     label: "Profile",   roles: ["Admin", "Agent", "Client"] },
 ];
 
 const roleColors: Record<string, string> = {
@@ -41,12 +42,10 @@ export default function Layout() {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  // Cerrar sidebar mobile al cambiar de página
   useEffect(() => {
     setMobileOpen(false);
   }, [location.pathname]);
 
-  // Colapsar automáticamente en tablet
   useEffect(() => {
     if (isTablet) setCollapsed(true);
     if (!isTablet && !isMobile) setCollapsed(false);
@@ -68,7 +67,7 @@ export default function Layout() {
       {/* Logo */}
       <div style={{
         padding: collapsed && !isMobile ? "24px 16px" : "20px 24px",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        borderBottom: "1px solid var(--border)",
         display: "flex", alignItems: "center",
         justifyContent: collapsed && !isMobile ? "center" : "space-between",
       }}>
@@ -78,8 +77,10 @@ export default function Layout() {
             background: "linear-gradient(135deg, #00D4FF, #00FF94)",
             borderRadius: "8px",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: "16px", flexShrink: 0,
-          }}>🛡️</div>
+            flexShrink: 0,
+          }}>
+            <i className="bi bi-shield-fill" style={{ fontSize: "16px", color: "#070710" }} />
+          </div>
           {(!collapsed || isMobile) && (
             <span style={{
               fontFamily: "'Syne', sans-serif",
@@ -93,11 +94,11 @@ export default function Layout() {
           <button
             onClick={() => setCollapsed(!collapsed)}
             style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: "6px", color: "#64748b",
+              background: "var(--input-bg)",
+              border: "1px solid var(--border-mid)",
+              borderRadius: "6px", color: "var(--text-low)",
               cursor: "pointer", padding: "4px 8px",
-              fontSize: "12px",
+              fontSize: "12px", transition: "all 0.2s",
             }}
           >{collapsed ? "›" : "‹"}</button>
         )}
@@ -117,17 +118,17 @@ export default function Layout() {
 
       {/* Role Badge */}
       {(!collapsed || isMobile) && user && (
-        <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+        <div style={{ padding: "12px 16px", borderBottom: "1px solid var(--border)" }}>
           <div style={{
             display: "inline-flex", alignItems: "center", gap: "6px",
             padding: "4px 10px", borderRadius: "20px",
-            background: roleBg[user.role] || "rgba(255,255,255,0.05)",
-            border: `1px solid ${roleColors[user.role] || "#64748b"}30`,
+            background: roleBg[user.role] || "var(--bg-glass)",
+            border: `1px solid ${roleColors[user.role] || "var(--border-mid)"}30`,
           }}>
-            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: roleColors[user.role] || "#64748b" }} />
+            <div style={{ width: "6px", height: "6px", borderRadius: "50%", background: roleColors[user.role] || "var(--text-low)" }} />
             <span style={{
               fontSize: "10px", fontWeight: 700, letterSpacing: "1.5px",
-              color: roleColors[user.role] || "#64748b", textTransform: "uppercase",
+              color: roleColors[user.role] || "var(--text-low)", textTransform: "uppercase",
             }}>{user.role}</span>
           </div>
         </div>
@@ -146,32 +147,32 @@ export default function Layout() {
               textDecoration: "none",
               background: isActive ? "rgba(0,212,255,0.1)" : "transparent",
               border: isActive ? "1px solid rgba(0,212,255,0.2)" : "1px solid transparent",
-              color: isActive ? "#00D4FF" : "#64748b",
+              color: isActive ? "var(--accent)" : "var(--text-low)",
               fontSize: "14px", fontWeight: isActive ? 600 : 400,
               transition: "all 0.2s",
               justifyContent: collapsed && !isMobile ? "center" : "flex-start",
             })}
           >
-            <span style={{ fontSize: "18px", flexShrink: 0 }}>{item.icon}</span>
+            <i className={item.icon} style={{ fontSize: "18px", flexShrink: 0 }} />
             {(!collapsed || isMobile) && item.label}
           </NavLink>
         ))}
       </nav>
 
       {/* User + logout */}
-      <div style={{ padding: "16px 12px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ padding: "16px 12px", borderTop: "1px solid var(--border)" }}>
         {(!collapsed || isMobile) && (
           <div
             onClick={() => navigate("/profile")}
             style={{
               padding: "12px",
-              background: "rgba(255,255,255,0.03)",
+              background: "var(--bg-glass)",
               borderRadius: "8px", marginBottom: "8px",
-              border: "1px solid rgba(255,255,255,0.06)",
+              border: "1px solid var(--border)",
               cursor: "pointer", transition: "all 0.2s",
             }}
-            onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(0,212,255,0.2)")}
-            onMouseLeave={e => (e.currentTarget.style.borderColor = "rgba(255,255,255,0.06)")}
+            onMouseEnter={e => (e.currentTarget.style.borderColor = "rgba(0,212,255,0.3)")}
+            onMouseLeave={e => (e.currentTarget.style.borderColor = "var(--border)")}
           >
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <div style={{
@@ -183,10 +184,10 @@ export default function Layout() {
                 {user?.firstName?.[0]}{user?.lastName?.[0]}
               </div>
               <div style={{ overflow: "hidden" }}>
-                <div style={{ fontSize: "13px", fontWeight: 600, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--text-hi)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {user?.firstName} {user?.lastName}
                 </div>
-                <div style={{ fontSize: "11px", color: "#475569", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                <div style={{ fontSize: "11px", color: "var(--text-low)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                   {user?.email}
                 </div>
               </div>
@@ -204,19 +205,25 @@ export default function Layout() {
             fontFamily: "'DM Sans', sans-serif",
             transition: "all 0.2s",
             display: "flex", alignItems: "center",
-            justifyContent: "center", gap: "6px",
+            justifyContent: "center", gap: "8px",
           }}
           onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,107,107,0.15)")}
           onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,107,107,0.08)")}
         >
-          ⏻ {(!collapsed || isMobile) && "Logout"}
+          <i className="bi bi-box-arrow-right" style={{ fontSize: "15px" }} />
+          {(!collapsed || isMobile) && "Logout"}
         </button>
       </div>
     </>
   );
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#070710", fontFamily: "'DM Sans', sans-serif" }}>
+    <div style={{
+      display: "flex", minHeight: "100vh",
+      background: "var(--bg-base)",
+      fontFamily: "'DM Sans', sans-serif",
+      transition: "background 0.3s ease",
+    }}>
 
       {/* Mobile Overlay */}
       {isMobile && mobileOpen && (
@@ -236,10 +243,10 @@ export default function Layout() {
         <aside style={{
           width: sidebarWidth,
           minHeight: "100vh",
-          background: "rgba(255,255,255,0.02)",
-          borderRight: "1px solid rgba(255,255,255,0.06)",
+          background: "var(--sidebar-bg)",
+          borderRight: "1px solid var(--border)",
           display: "flex", flexDirection: "column",
-          transition: "width 0.3s ease",
+          transition: "width 0.3s ease, background 0.3s ease",
           position: "fixed", top: 0, left: 0, bottom: 0,
           zIndex: 100, backdropFilter: "blur(20px)",
         }}>
@@ -252,14 +259,14 @@ export default function Layout() {
         <aside style={{
           width: "280px",
           height: "100vh",
-          background: "#0d0d1a",
-          borderRight: "1px solid rgba(255,255,255,0.08)",
+          background: "var(--sidebar-bg)",
+          borderRight: "1px solid var(--border)",
           display: "flex", flexDirection: "column",
           position: "fixed", top: 0, left: 0,
           zIndex: 200,
           transform: mobileOpen ? "translateX(0)" : "translateX(-100%)",
           transition: "transform 0.3s ease",
-          boxShadow: mobileOpen ? "8px 0 32px rgba(0,0,0,0.5)" : "none",
+          boxShadow: mobileOpen ? "8px 0 32px rgba(0,0,0,0.3)" : "none",
         }}>
           <SidebarContent />
         </aside>
@@ -271,35 +278,37 @@ export default function Layout() {
         marginLeft: isMobile ? 0 : sidebarWidth,
         transition: "margin-left 0.3s ease",
         minHeight: "100vh",
+        background: "var(--bg-base)",
       }}>
         {/* Top Header */}
         <div style={{
           height: "60px",
           padding: isMobile ? "0 16px" : "0 32px",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          borderBottom: "1px solid var(--border)",
           display: "flex", alignItems: "center",
           justifyContent: "space-between",
-          background: "rgba(255,255,255,0.01)",
+          background: "var(--bg-glass)",
           backdropFilter: "blur(10px)",
           position: "sticky", top: 0, zIndex: 50,
+          transition: "background 0.3s ease, border-color 0.3s ease",
         }}>
-          {/* Mobile hamburger */}
           {isMobile ? (
             <button
               onClick={() => setMobileOpen(true)}
               style={{
-                background: "rgba(255,255,255,0.04)",
-                border: "1px solid rgba(255,255,255,0.08)",
-                borderRadius: "8px", color: "#94a3b8",
+                background: "var(--input-bg)",
+                border: "1px solid var(--border-mid)",
+                borderRadius: "8px", color: "var(--text-mid)",
                 cursor: "pointer", padding: "8px 10px",
-                fontSize: "18px",
+                display: "flex", alignItems: "center", justifyContent: "center",
               }}
-            >☰</button>
+            >
+              <i className="bi bi-list" style={{ fontSize: "20px" }} />
+            </button>
           ) : (
             <div />
           )}
 
-          {/* Mobile Logo */}
           {isMobile && (
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <div style={{
@@ -307,8 +316,9 @@ export default function Layout() {
                 background: "linear-gradient(135deg, #00D4FF, #00FF94)",
                 borderRadius: "6px",
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: "14px",
-              }}>🛡️</div>
+              }}>
+                <i className="bi bi-shield-fill" style={{ fontSize: "13px", color: "#070710" }} />
+              </div>
               <span style={{
                 fontFamily: "'Syne', sans-serif", fontWeight: 800, fontSize: "13px",
                 background: "linear-gradient(90deg, #00D4FF, #00FF94)",
@@ -317,9 +327,9 @@ export default function Layout() {
             </div>
           )}
 
-          {/* Right side actions */}
           <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
             {!isMobile && <GlobalSearch />}
+            <ThemeToggle />
             <NotificationBell />
           </div>
         </div>
@@ -334,12 +344,13 @@ export default function Layout() {
           <div style={{
             position: "fixed", bottom: 0, left: 0, right: 0,
             height: "64px",
-            background: "#0d0d1a",
-            borderTop: "1px solid rgba(255,255,255,0.08)",
+            background: "var(--sidebar-bg)",
+            borderTop: "1px solid var(--border)",
             display: "flex", alignItems: "center",
             justifyContent: "space-around",
             zIndex: 50, backdropFilter: "blur(20px)",
             paddingBottom: "env(safe-area-inset-bottom)",
+            transition: "background 0.3s ease",
           }}>
             {visibleNav.slice(0, 4).map(item => (
               <NavLink
@@ -350,12 +361,12 @@ export default function Layout() {
                   alignItems: "center", gap: "2px",
                   padding: "8px 16px", borderRadius: "8px",
                   textDecoration: "none",
-                  color: isActive ? "#00D4FF" : "#475569",
+                  color: isActive ? "var(--accent)" : "var(--text-muted)",
                   transition: "color 0.2s",
                   minWidth: "60px",
                 })}
               >
-                <span style={{ fontSize: "20px" }}>{item.icon}</span>
+                <i className={item.icon} style={{ fontSize: "20px" }} />
                 <span style={{ fontSize: "10px", letterSpacing: "0.5px" }}>{item.label}</span>
               </NavLink>
             ))}

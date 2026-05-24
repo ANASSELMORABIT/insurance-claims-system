@@ -14,16 +14,18 @@ public class ClaimService : IClaimService
     private readonly IEmailService _emailService;
     private readonly INotificationService _notificationService;
 
-    public ClaimService(
-        ApplicationDbContext context,
-        IEmailService emailService,
-        INotificationService notificationService)
+    private readonly IAgentAssignmentService _agentAssignmentService;
+   public ClaimService(
+    ApplicationDbContext context,
+    IEmailService emailService,
+    INotificationService notificationService,
+    IAgentAssignmentService agentAssignmentService)
     {
         _context = context;
         _emailService = emailService;
         _notificationService = notificationService;
+        _agentAssignmentService = agentAssignmentService;
     }
-
     public async Task<PagedResult<ClaimResponseDto>> GetAllAsync(ClaimFilterDto filter)
     {
         var query = _context.Claims
@@ -100,6 +102,11 @@ public class ClaimService : IClaimService
             Status = Core.Enums.ClaimStatusType.Pending,
             CreatedAt = DateTime.UtcNow
         };
+
+        // Auto-assign least loaded agent
+        var agentId = await _agentAssignmentService.GetLeastLoadedAgentAsync();
+        if (agentId != null)
+            claim.AgentId = agentId;
 
         _context.Claims.Add(claim);
         await _context.SaveChangesAsync();
@@ -279,4 +286,32 @@ public class ClaimService : IClaimService
             ChangedBy = h.ChangedBy != null ? $"{h.ChangedBy.FirstName} {h.ChangedBy.LastName}" : ""
         }).OrderByDescending(h => h.ChangedAt).ToList() ?? new()
     };
+
+
+    public async Task<ClaimResponseDto> AssignAgentAsync(int claimId, string? agentId)
+{
+    var claim = await _context.Claims.FindAsync(claimId)
+        ?? throw new KeyNotFoundException($"Claim {claimId} not found.");
+
+    claim.AgentId = agentId;
+    claim.UpdatedAt = DateTime.UtcNow;
+    await _context.SaveChangesAsync();
+
+    // Notificar al agente
+    if (agentId != null)
+    {
+        try
+        {
+            await _notificationService.CreateAsync(
+                agentId,
+                "Claim Assigned",
+                $"Claim #{claimId} '{claim.Title}' has been assigned to you.",
+                $"/claims/{claimId}"
+            );
+        }
+        catch { }
+    }
+
+    return await GetByIdAsync(claimId);
+}
 }

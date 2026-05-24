@@ -14,6 +14,8 @@ import Profile from "./pages/profile/Profile";
 import UsersList from "./pages/users/UsersList";
 import PoliciesList from "./pages/policies/PoliciesList";
 import Reports from "./pages/reports/Reports";
+import { ThemeProvider } from "./context/ThemeContext";
+
 
 const queryClient = new QueryClient();
 
@@ -60,16 +62,18 @@ function AppRoutes() {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ToastProvider>
-        <ConfirmProvider>
-          <AuthProvider>
-            <BrowserRouter>
-              <AppRoutes />
-            </BrowserRouter>
-          </AuthProvider>
-        </ConfirmProvider>
-      </ToastProvider>
-    </QueryClientProvider>
+    <ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ToastProvider>
+          <ConfirmProvider>
+            <AuthProvider>
+              <BrowserRouter>
+                <AppRoutes />
+              </BrowserRouter>
+            </AuthProvider>
+          </ConfirmProvider>
+        </ToastProvider>
+      </QueryClientProvider>
+    </ThemeProvider>
   );
 }

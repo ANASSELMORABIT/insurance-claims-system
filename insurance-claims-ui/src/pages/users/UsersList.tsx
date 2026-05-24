@@ -45,19 +45,38 @@ export default function UsersList() {
   }
 };
 
-  const handleCreate = async (e: React.FormEvent) => {
+const handleCreate = async (e: React.FormEvent) => {
   e.preventDefault();
   setFormLoading(true);
   setFormError("");
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(form.email)) {
+    setFormError("Please enter a valid email address.");
+    setFormLoading(false);
+    return;
+  }
+
+  // Validar password mínimo
+  if (form.password.length < 8) {
+    setFormError("Password must be at least 8 characters.");
+    setFormLoading(false);
+    return;
+  }
   try {
     await userService.create(form);
     queryClient.invalidateQueries({ queryKey: ["users"] });
     setShowForm(false);
     setForm({ firstName: "", lastName: "", email: "", password: "", role: "Client" });
     toast.success("User created", `${form.firstName} ${form.lastName} has been added successfully.`);
-  } catch {
-    setFormError("Failed to create user. Email may already exist.");
-    toast.error("Failed to create user");
+  } catch (err: unknown) {
+    // Extraer mensaje del backend
+    let message = "Failed to create user.";
+    if (err && typeof err === "object" && "response" in err) {
+      const axiosErr = err as { response?: { data?: { message?: string } } };
+      message = axiosErr.response?.data?.message || message;
+    }
+    setFormError(message);
+    toast.error("Failed to create user", message);
   } finally {
     setFormLoading(false);
   }
@@ -111,7 +130,18 @@ export default function UsersList() {
                 <option value="Admin">Admin</option>
               </select>
             </div>
-            {formError && <div style={{ padding: "10px", marginBottom: "12px", background: "rgba(255,107,107,0.1)", border: "1px solid rgba(255,107,107,0.2)", borderRadius: "8px", color: "#FF6B6B", fontSize: "12px" }}>{formError}</div>}
+            {formError && (
+              <div style={{
+                padding: "10px 14px", marginBottom: "12px",
+                background: "rgba(255,107,107,0.08)",
+                border: "1px solid rgba(255,107,107,0.2)",
+                borderRadius: "8px", color: "#FF6B6B", fontSize: "13px",
+                display: "flex", alignItems: "center", gap: "8px",
+              }}>
+                <span>⚠️</span>
+                <span>{formError}</span>
+              </div>
+            )}
             <button type="submit" disabled={formLoading} style={{ padding: "10px 24px", background: "linear-gradient(135deg, #00D4FF, #00FF94)", border: "none", borderRadius: "8px", color: "#070710", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}>
               {formLoading ? "Creating..." : "Create User"}
             </button>

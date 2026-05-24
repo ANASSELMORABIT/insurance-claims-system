@@ -12,4 +12,6 @@ public interface IClaimService
     Task<ClaimResponseDto> UpdateStatusAsync(int id, UpdateClaimStatusDto dto, string changedByUserId);
     Task DeleteAsync(int id);
     Task<PagedResult<ClaimResponseDto>> GetMyClaimsAsync(string clientId, ClaimFilterDto filter);
+
+    Task<ClaimResponseDto> AssignAgentAsync(int claimId, string? agentId);
 }   

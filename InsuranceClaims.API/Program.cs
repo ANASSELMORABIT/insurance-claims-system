@@ -75,6 +75,8 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<IReportsService, ReportsService>();
 
+builder.Services.AddScoped<IAgentAssignmentService, AgentAssignmentService>();
+
 // Límite de tamaño de archivo (10MB)
 builder.Services.Configure<FormOptions>(options =>
 {

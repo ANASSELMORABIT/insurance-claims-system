@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using InsuranceClaims.Core.DTOs.Claims;
+using InsuranceClaims.Core.DTOs;
 using InsuranceClaims.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -113,6 +114,30 @@ public class ClaimsController : ControllerBase
         {
             await _claimService.DeleteAsync(id);
             return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { message = ex.Message });
+        }
+    }
+
+    [HttpGet("agent-workloads")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetAgentWorkloads(
+        [FromServices] IAgentAssignmentService assignmentService)
+    {
+        var result = await assignmentService.GetAgentWorkloadsAsync();
+        return Ok(result);
+    }
+
+    [HttpPatch("{id}/assign")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> AssignAgent(int id, [FromBody] AssignAgentDto dto)
+    {
+        try
+        {
+            var result = await _claimService.AssignAgentAsync(id, dto.AgentId);
+            return Ok(result);
         }
         catch (KeyNotFoundException ex)
         {

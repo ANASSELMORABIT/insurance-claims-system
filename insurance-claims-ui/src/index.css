@@ -2,72 +2,122 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Dark Theme (default) ── */
+:root, [data-theme="dark"] {
+  --bg-base:      #070710;
+  --bg-card:      #171717;
+  --bg-card-alt:  #0d0d1a;
+  --bg-glass:     rgba(255,255,255,0.03);
+  --border:       rgba(255,255,255,0.06);
+  --border-mid:   rgba(255,255,255,0.1);
+  --text-hi:      #f1f5f9;
+  --text-mid:     #94a3b8;
+  --text-low:     #64748b;
+  --text-muted:   #475569;
+  --accent:       #00D4FF;
+  --accent-green: #00FF94;
+  --accent-amber: #FFB800;
+  --accent-red:   #FF6B6B;
+  --accent-purple:#B388FF;
+  --sidebar-bg:   rgba(255,255,255,0.02);
+  --input-bg:     rgba(255,255,255,0.04);
+  --hover-bg:     rgba(255,255,255,0.02);
+  --shadow:       0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* ── Light Theme ── */
+[data-theme="light"] {
+  --bg-base:      #f0f4f8;
+  --bg-card:      #ffffff;
+  --bg-card-alt:  #f8fafc;
+  --bg-glass:     rgba(255,255,255,0.8);
+  --border:       rgba(0,0,0,0.08);
+  --border-mid:   rgba(0,0,0,0.15);
+  --text-hi:      #0f172a;
+  --text-mid:     #334155;
+  --text-low:     #64748b;
+  --text-muted:   #94a3b8;
+  --accent:       #0099cc;
+  --accent-green: #00a86b;
+  --accent-amber: #d97706;
+  --accent-red:   #dc2626;
+  --accent-purple:#7c3aed;
+  --sidebar-bg:   #ffffff;
+  --input-bg:     #f8fafc;
+  --hover-bg:     rgba(0,0,0,0.03);
+  --shadow:       0 4px 16px rgba(0,0,0,0.1);
+}
+
+
+[data-theme="light"] body {
+  background: #f0f4f8;
+}
+
+[data-theme="light"] aside {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+[data-theme="light"] main {
+  background: #f0f4f8;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+
+
 body {
-  background: #070710;
-  color: #e2e8f0;
+  background: var(--bg-base);
+  color: var(--text-hi);
   font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: #0a0a14; }
-::-webkit-scrollbar-thumb { background: #1e2040; border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #00D4FF40; }
+::-webkit-scrollbar-track { background: var(--bg-base); }
+::-webkit-scrollbar-thumb { background: var(--border-mid); border-radius: 2px; }
 
 .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-glass);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.glow-blue { box-shadow: 0 0 20px rgba(0, 212, 255, 0.15); }
-.glow-green { box-shadow: 0 0 20px rgba(0, 255, 148, 0.15); }
-
-.gradient-text {
-  background: linear-gradient(90deg, #00D4FF, #00FF94);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.card-hover {
-  transition: all 0.2s ease;
-}
-.card-hover:hover {
-  transform: translateY(-2px);
-  border-color: rgba(0, 212, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 212, 255, 0.1);
+  border: 1px solid var(--border);
 }
 
 input, select, textarea {
-  background: rgba(255,255,255,0.04) !important;
-  border: 1px solid rgba(255,255,255,0.08) !important;
-  color: #e2e8f0 !important;
+  background: var(--input-bg) !important;
+  border: 1px solid var(--border-mid) !important;
+  color: var(--text-hi) !important;
   border-radius: 8px;
   padding: 10px 14px;
   width: 100%;
   font-family: 'DM Sans', sans-serif;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s, background 0.3s;
 }
+
 input:focus, select:focus, textarea:focus {
   outline: none !important;
-  border-color: rgba(0, 212, 255, 0.4) !important;
-  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.08) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.08) !important;
 }
-input::placeholder { color: #475569; }
-select option { background: #0d0d1a; }
 
-/* Mobile bottom nav spacing */
+input::placeholder { color: var(--text-muted); }
+select option { background: var(--bg-card-alt); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+
 @media (max-width: 767px) {
-  main > div:last-child {
-    padding-bottom: 80px;
-  }
+  main > div:last-child { padding-bottom: 80px; }
 }
 
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+[data-theme="light"] .dashboard-card {
+  background: #ffffff !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
 }
